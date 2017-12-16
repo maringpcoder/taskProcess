@@ -1,0 +1,19 @@
+{
+	"require": {
+		"nmred/kafka-php": "0.2.*",
+		"psr/log": "^1.0"
+	},
+	"autoload": {
+		"psr-4": {
+			"Kafka\\": "src/",
+			"App\\":"application/"
+		},
+		"psr-0":{
+			"ConfigLib": "lib/"
+		}
+	},
+	"require-dev": {
+		"monolog/monolog": "^1.23",
+		"kmelia/monolog-stdout-handler": "^1.2"
+	}
+}
