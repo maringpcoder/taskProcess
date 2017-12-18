@@ -20,7 +20,7 @@ $keysOverTimeTodo = array(
 $now = time();
 $cache_over_time= $now+60;
 
-for ($n=0 ; $n<10000;$n++){//模拟5W并发
+for ($n=0 ; $n<1000;$n++){//模拟5W并发
     if($n==0){
         foreach ($keysOverTimeTodo as $key=>$value)
         {
@@ -30,10 +30,10 @@ for ($n=0 ; $n<10000;$n++){//模拟5W并发
     } else{
         foreach ($keysOverTimeTodo as $key=>$value)
         {
-            $tmpFix = microtime().$n;
+            $tmpFix = strval(microtime(true).$n);
             $redis->set('USER_CACHE_OVERDUE:'.$value.$tmpFix,3);
-            if($redis->ExpireAt('USER_CACHE_OVERDUE:'.$value.$tmpFix,$cache_over_time)){
-                echo "Fail!";
+            if($redis->ExpireAt('USER_CACHE_OVERDUE:'.$value.$tmpFix,$cache_over_time)==FALSE){
+                echo "Fail!".PHP_EOL;
             };
             usleep(100);//100毫秒
         }
