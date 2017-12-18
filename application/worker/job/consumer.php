@@ -12,9 +12,12 @@ use Kafka\ConsumerConfig;
 use Monolog\Handler\StdoutHandler;
 use Monolog\Logger;
 
-class consumer
+class Consumer
 {
 
+    /**
+     * @description 消费
+     */
     public static function run()
     {
         $logger = new Logger('over_time_change');
@@ -30,9 +33,10 @@ class consumer
         try{
             $consumer = new \Kafka\Consumer();
             $consumer->setLogger($logger);
-            $consumer->start(function ($topc , $partition,$message){//根据topic
-                error_log("consumer_message:".json_encode($message).PHP_EOL,3,LOG_PATH.'consumer.log');
-            });
+            $consumer->start(function ($topc, $partition, $message) {
+                    error_log("consumer_message:" . json_encode($message) . PHP_EOL, 3, LOG_PATH . 'consumer.log');
+            },false);
+
         }catch (\Exception $exception){
             error_log($exception->getMessage(),3,LOG_PATH.'exception.log');
         }

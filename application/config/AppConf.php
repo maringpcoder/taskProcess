@@ -8,7 +8,7 @@
 namespace App\config;
 class AppConf{
 
-    const CONF=[
-
+    const OVER_CACHE_KEY_ARR = [
+        ''
     ];
 }
