@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * 订阅redis key过期事件
+ * 订阅redis key过期事件worker
  * Created by PhpStorm.
  * User: marin
  * Date: 2017/12/18
@@ -9,10 +9,8 @@
  */
 
 namespace App\worker;
-
-
-use App\core\RedisCache;
 use App\lib\Config;
+use App\worker\job\ClearCache;
 
 class CacheClearWorker
 {
@@ -31,8 +29,13 @@ class CacheClearWorker
      */
     public function workerStart()
     {
-       $predis =  RedisCache::getSingleRedis(true);
-       
+        try {
+            ClearCache::run();
+           }catch (\Exception $exception){
+            error_log(date('Y-m-d H:i:s')."\t"."Message:{$exception->getMessage()}, 
+              ClearCacheWork Quit!,ErrorCode:{$exception->getCode()}.\n",3,LOG_PATH.'ClearCacheWork.log');
+            $this->_worker->exit();
+        }
     }
 
     public function Start(\swoole_process $worker)

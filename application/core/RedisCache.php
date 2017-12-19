@@ -11,6 +11,7 @@
 namespace App\core;
 
 use App\lib\Config;
+use RdKafka\Exception;
 
 class RedisCache
 {
@@ -33,19 +34,30 @@ class RedisCache
 
     }
 
+    /**
+     * @param bool $pconnect
+     * @param string $type
+     * @return RedisCache|mixed
+     * @return mixed
+     *
+     */
     public static function getSingleRedis($pconnect=false,$type = 'redis_kv_expire')
     {
-        if (!isset(self::$_instance[$type])) {
-            $config = Config::getConfigArr('redis_env_section');
-            if ($config) {
-                isset($config[$type]) ? $config[$type] : [];
+        try {
+            if (!isset(self::$_instance[$type])) {
+                $config = Config::getConfigArr('redis_env_section');
+                if ($config) {
+                    isset($config[$type]) ? $config[$type] : [];
+                }
+                if (empty($config)) {
+                    throw new \Exception('redis instance type=> ' . $type . ':配置不存在!');
+                }
+                return self::$_instance[$type] = new self($config, $pconnect);
             }
-            if (empty($config)) {
-                throw new \Exception('redis instance type=> ' . $type . ':配置不存在!');
-            }
-            self::$_instance[$type] = new self($config,$pconnect);
+            return self::$_instance[$type];
+        }catch (\Exception $exception){
+            throw new \Exception($exception->getMessage(),$exception->getCode());
         }
-        return self::$_instance[$type];
     }
 
 
@@ -81,8 +93,8 @@ class RedisCache
     public function pconnect()
     {
         try {
-            if($this->_redis){
-                @$this->_redis->close();
+            if($this->_predis){
+                @$this->_predis->close();
             }
 
             $this->_predis = new \Redis();
@@ -90,6 +102,7 @@ class RedisCache
             $this->conn = true;
         } catch (\RedisException $e) {
             $this->conn = false;
+            throw new \Exception($e->getMessage(),$e->getCode());
         }
     }
 
@@ -99,7 +112,7 @@ class RedisCache
      * @throws \Exception
      *
      */
-    public function subscribe($channelName,$callbackArr)
+    public function subscribe(array $channelName,callable $callbackArr)
     {
         try {
             if ($this->_conn) {
