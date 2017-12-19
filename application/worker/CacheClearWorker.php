@@ -16,10 +16,12 @@ use App\worker\job\ClearCache;
 class CacheClearWorker
 {
     protected $_worker = null;
+    public $_clearCacheSection = null;
 
     public function __construct(\swoole_process $worker)
     {
         $this->_worker = $worker;
+        $this->_clearCacheSection = Config::getConfig('clearCache_section');
         swoole_set_process_name(sprintf($this->getWorkerProcessName().':%s','worker'));
         error_log(date('Y-m-d H:i:s')."\t: The Worker Process Worker Start!".PHP_EOL,3,'ClearCacheWork.log');
         $this->workerStart();
@@ -52,15 +54,16 @@ class CacheClearWorker
      */
     public function getWorkerProcessName()
     {
-        return sprintf(Config::getConfig('clearCache_section')->panda_process.':%s',Config::getConfig()->children->redis_cache_clear);
+
+        return sprintf($this->_clearCacheSection->panda_process.':%s',$this->_clearCacheSection->children->redis_cache_clear);
     }
     /**
      * 获取主进程
      */
     public function getMpProcessName()
     {
-        $prefix = Config::getConfig()->panda_process .':%s';
-        return sprintf($prefix,Config::getConfig()->master->log_master_name);
+        $prefix = $this->_clearCacheSection->panda_process .':%s';
+        return sprintf($prefix,$this->_clearCacheSection->master->clear_master_name);
     }
     /**
      * 检查主进程是否存在

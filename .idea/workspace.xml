@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0ec4d765-2e1c-493a-a346-b7e0a803bfc9" name="Default" comment="">
+    <list default="true" id="0ec4d765-2e1c-493a-a346-b7e0a803bfc9" name="Default" comment="redis key过期事件订阅">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/env.ini" afterPath="$PROJECT_DIR$/env.ini" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/ClearCacheHandler.php" afterPath="$PROJECT_DIR$/ClearCacheMaster.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/ConsumerHander.php" afterPath="$PROJECT_DIR$/ConsumerMaster.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ClearCacheMaster.php" afterPath="$PROJECT_DIR$/ClearCacheMaster.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/worker/CacheClearWorker.php" afterPath="$PROJECT_DIR$/application/worker/CacheClearWorker.php" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -42,8 +41,8 @@
       <file leaf-file-name="CacheClearWorker.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/application/worker/CacheClearWorker.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="195">
-              <caret line="63" column="5" lean-forward="true" selection-start-line="63" selection-start-column="5" selection-end-line="63" selection-end-column="5" />
+            <state relative-caret-position="234">
+              <caret line="22" column="33" lean-forward="true" selection-start-line="22" selection-start-column="33" selection-end-line="22" selection-end-column="33" />
               <folding>
                 <element signature="e#6#115#0#PHP" expanded="true" />
                 <element signature="e#139#164#0#PHP" expanded="true" />
@@ -55,8 +54,18 @@
       <file leaf-file-name="ClearCacheMaster.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/ClearCacheMaster.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-234">
-              <caret line="28" column="5" lean-forward="true" selection-start-line="28" selection-start-column="5" selection-end-line="28" selection-end-column="5" />
+            <state relative-caret-position="115">
+              <caret line="34" column="9" lean-forward="true" selection-start-line="34" selection-start-column="9" selection-end-line="34" selection-end-column="9" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="env.ini" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/env.ini">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="252">
+              <caret line="14" column="25" lean-forward="false" selection-start-line="14" selection-start-column="8" selection-end-line="14" selection-end-column="25" />
               <folding />
             </state>
           </provider>
@@ -102,6 +111,9 @@
       <find>MasterProcess</find>
       <find>redis_kv_expire_channel</find>
       <find>cache_clear_handler</find>
+      <find>ClearCacheWork</find>
+      <find>clear_master_name</find>
+      <find>getConfig('clearCache_section')</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -135,12 +147,12 @@
         <option value="$PROJECT_DIR$/application/core/RedisCache.php" />
         <option value="$PROJECT_DIR$/application/worker/job/ClearCache.php" />
         <option value="$PROJECT_DIR$/.gitignore" />
-        <option value="$PROJECT_DIR$/application/worker/CacheClearWorker.php" />
         <option value="$PROJECT_DIR$/ClearCache.php" />
         <option value="$PROJECT_DIR$/application/bootstrap.php" />
         <option value="$PROJECT_DIR$/ConsumerHander.php" />
         <option value="$PROJECT_DIR$/ConsumerMasterProcess.php" />
         <option value="$PROJECT_DIR$/env.ini" />
+        <option value="$PROJECT_DIR$/application/worker/CacheClearWorker.php" />
         <option value="$PROJECT_DIR$/ClearCacheMaster.php" />
       </list>
     </option>
@@ -191,20 +203,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="taskProcess" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="taskProcess" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="taskProcess" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="application" />
               <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
             </PATH_ELEMENT>
           </PATH>
@@ -418,11 +416,25 @@
       <option name="project" value="LOCAL" />
       <updated>1513663598918</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="redis key过期事件订阅">
+      <created>1513664321114</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1513664321114</updated>
+    </task>
+    <task id="LOCAL-00012" summary="redis key过期事件订阅">
+      <created>1513665744106</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1513665744106</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="64092000" />
+    <option name="totallyTimeSpent" value="66630000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
@@ -628,14 +640,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/application/lib/Config.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="36">
-          <caret line="14" column="0" lean-forward="true" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/vendor/nmred/kafka-php/src/Kafka/Consumer/Process.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="202">
@@ -736,17 +740,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/application/worker/CacheClearWorker.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="63" column="5" lean-forward="true" selection-start-line="63" selection-start-column="5" selection-end-line="63" selection-end-column="5" />
-          <folding>
-            <element signature="e#6#115#0#PHP" expanded="true" />
-            <element signature="e#139#164#0#PHP" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/ConsumerMaster.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1728">
@@ -789,14 +782,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/env.ini">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="184">
-          <caret line="18" column="19" lean-forward="false" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="19" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/application/core/RedisCache.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="298">
@@ -807,10 +792,37 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/application/lib/Config.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="248">
+          <caret line="25" column="43" lean-forward="true" selection-start-line="25" selection-start-column="43" selection-end-line="25" selection-end-column="43" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/env.ini">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="252">
+          <caret line="14" column="25" lean-forward="false" selection-start-line="14" selection-start-column="8" selection-end-line="14" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/worker/CacheClearWorker.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="234">
+          <caret line="22" column="33" lean-forward="true" selection-start-line="22" selection-start-column="33" selection-end-line="22" selection-end-column="33" />
+          <folding>
+            <element signature="e#6#115#0#PHP" expanded="true" />
+            <element signature="e#139#164#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/ClearCacheMaster.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-234">
-          <caret line="28" column="5" lean-forward="true" selection-start-line="28" selection-start-column="5" selection-end-line="28" selection-end-column="5" />
+        <state relative-caret-position="115">
+          <caret line="34" column="9" lean-forward="true" selection-start-line="34" selection-start-column="9" selection-end-line="34" selection-end-column="9" />
           <folding />
         </state>
       </provider>
