@@ -39,6 +39,7 @@ class AsynRedis
         {
             self::$_AsynRedis[$type] = new self($type);
         }
+        return self::$_AsynRedis[$type];
     }
 
     public function lpush($key,$value,$callback=null)
