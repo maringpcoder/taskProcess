@@ -123,4 +123,12 @@ class RedisCache
         }
     }
 
+    /**
+     *
+     */
+    public function unSubscribe()
+    {
+        $this->_predis->close();
+    }
+
 }
