@@ -1,5 +1,6 @@
 <?php
 /**
+ * 启动配置
  * Created by PhpStorm.
  * User: marin
  * Date: 2017/12/15

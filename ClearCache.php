@@ -116,5 +116,5 @@ class ClearCacheMaster
 }
 
 $mainProcess = new ClearCacheMaster();
-//$mainProcess->start();
-//$mainProcess->after();
+$mainProcess->start();
+$mainProcess->after();
