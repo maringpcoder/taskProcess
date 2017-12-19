@@ -1,12 +1,24 @@
 <?php
 /**
- * 清空缓存
+ * @description kafka消费broker of partition list
+ * ①实现子进程退出重启。
+ * ②实现主进程退出,子进程也退出,该类可以复用,方便后期加处理进程逻辑,作为单独的进程管理单元,如需加，请copy
+ * 为了进程中防止定时器中时间错乱,勿加异步IO函数,如PHP curl等
+ * Created by PhpStorm.
+ * User: marin
+ * Date: 2017/12/15
+ * Time: 11:23
+ * @since 1.0.0
  */
+
 namespace App;
+
+
 use App\lib\Config;
+
 include_once('./application/bootstrap.php');
 
-class ClearCacheMaster
+class ConsumerMaster
 {
     protected $_max_worker_num = 0;
     protected $_lock = null;
@@ -18,7 +30,7 @@ class ClearCacheMaster
     public function __construct()
     {
         swoole_set_process_name($this->getConsumerMp());
-        $this->_max_worker_num = Config::getConfig('clearCache_section')->cache_clear_handler->worker_num;
+        $this->_max_worker_num = Config::getConfig()->log_handler->worker_num;
         self::$_mpid = posix_getpid();
         //设置异步信号监听，回收进程，防止僵尸进程出现
         \swoole_process::signal(SIGCHLD, [$this, 'listenEventWait']);
@@ -35,12 +47,12 @@ class ClearCacheMaster
             $sizeWorker = $this->_max_worker_num - count($this->_workers);
             for ($n = 0; $n < $sizeWorker; $n++) {
                 //统一子进程执行入口方法
-                $process = new \swoole_process(['\\App\\worker\\CacheClearWorker', 'Start'], false, false);
+                $process = new \swoole_process(['\\App\\worker\\Worker', 'Start'], false, false);
                 $chId = $process->start();
                 $this->_workers[strval($chId)] = time();
             }
         } catch (\Exception $exception) {
-            //todo 杀掉主进程??
+
         }
         $this->_lock->unlock();
     }
@@ -51,7 +63,7 @@ class ClearCacheMaster
     public function listenEventWait()
     {
         while ($ret = \swoole_process::wait(false)) {//阻塞等待子进程退出，并回收子进程
-            error_log(date('Y-m-d H:i:s') . "\tWorker Process {$ret['pid']} Quit!\n", 3, LOG_PATH . 'cache_log.txt');
+            error_log(date('Y-m-d H:i:s') . "\tWorker Process {$ret['pid']} Quit!\n", 3, LOG_PATH . 'log.txt');
             $this->_lock->lock();
             if (isset($this->_workers[strval($ret['pid'])])) {
                 unset($this->_workers[strval($ret['pid'])]);
@@ -68,12 +80,12 @@ class ClearCacheMaster
     {
         $timeCurr = time();
         $pidWorkerItem = $this->_workers;
-        error_log(date('Y-m-d H:i:s') . "\tReboot\n", 3, LOG_PATH . 'cache_log.txt');
+        error_log(date('Y-m-d H:i:s') . "\tReboot\n", 3, LOG_PATH . 'log.txt');
         foreach ($pidWorkerItem as $pid => $timeStar) {
             //如果超过了5个小时，则杀掉子进程
             if ($timeCurr - $timeStar > (3600 * 5)) {
                 \swoole_process::kill($pid);
-                error_log(date('Y-m-d H:i:s') . "\tReboot $pid " . PHP_EOL, 3, LOG_PATH . 'cache_log.txt');
+                error_log(date('Y-m-d H:i:s') . "\tReboot $pid " . PHP_EOL, 3, LOG_PATH . 'log.txt');
             }
         }
         $this->after();
@@ -94,7 +106,7 @@ class ClearCacheMaster
     public function getConsumerMp()
     {
         $prefix = $this->getMpNamePrefix().':%s';
-        return sprintf($prefix,Config::getConfig()->master->clear_master_name);
+        return sprintf($prefix,Config::getConfig()->master->log_master_name);
     }
 
 
@@ -115,6 +127,6 @@ class ClearCacheMaster
     }
 }
 
-$mainProcess = new ClearCacheMaster();
+$mainProcess = new ConsumerMaster();
 $mainProcess->start();
 $mainProcess->after();
