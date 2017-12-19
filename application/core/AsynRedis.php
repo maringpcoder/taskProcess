@@ -37,7 +37,7 @@ class AsynRedis
     {
         if(! (isset(self::$_AsynRedis[$type]) && (self::$_AsynRedis[$type] instanceof AsynRedis) ))
         {
-            self::$_AsynRedis[$type] = new self($type,$callback);
+            self::$_AsynRedis[$type] = new self($type);
         }
     }
 
