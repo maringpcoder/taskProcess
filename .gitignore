@@ -3,4 +3,6 @@
 ### Example user template
 
 # IntelliJ project files
-.idea/*
+.idea
+.idea/kafka.iml
+.idea/workspace.xml
