@@ -52,7 +52,7 @@ class RedisCache
                 if (empty($config)) {
                     throw new \Exception('redis instance type=> ' . $type . ':配置不存在!');
                 }
-                return self::$_instance[$type] = new self($config, $pconnect);
+                return self::$_instance[$type] = new self($config[$type], $pconnect);
             }
             return self::$_instance[$type];
         }catch (\Exception $exception){
@@ -98,7 +98,7 @@ class RedisCache
             }
 
             $this->_predis = new \Redis();
-            $this->_predis->pconnect($this->_config['host'],$this->_config['password'],$this->_config['timeout']);
+            $this->_predis->pconnect($this->_config['host'],intval($this->_config['password']));
             $this->conn = true;
         } catch (\RedisException $e) {
             $this->conn = false;

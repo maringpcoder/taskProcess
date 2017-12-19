@@ -11,6 +11,7 @@ namespace App\worker\job;
 
 
 use App\core\RedisCache;
+use Redis;
 
 class ClearCache
 {
@@ -21,16 +22,19 @@ class ClearCache
     public static function run()
     {
         try {
-            ClearCache::run();
             $pRedis = RedisCache::getSingleRedis(true);
-            $pRedis ->subscribe([self::KEY_EVENT_EXPIRED],[]);
+            $pRedis ->subscribe([self::KEY_EVENT_EXPIRED],['App\worker\job\ClearCache','testCall']);
         }catch (\Exception $exception){
             throw new \Exception($exception->getMessage(),$exception->getCode());
         }
     }
 
 
-
+    public static function testCall(Redis $instance,$channelName,$message)
+    {
+        echo $message.PHP_EOL;
+        error_log($message.PHP_EOL,3,'testCall.log');
+    }
 
 
 }
