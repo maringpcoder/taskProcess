@@ -9,7 +9,7 @@
 ini_set('default_socket_timeout', -1);  //不超时
 try{
     $redis = new Redis();
-    $redis->pconnect('192.168.1.125', 6379);
+    $redis->pconnect('172.16.61.100', 6379);
     $redis->subscribe(array('__keyevent@0__:expired'),'tell');
 }catch (RedisException $e){
     echo 'Error:'.$e->getMessage()."\r\n";
@@ -20,14 +20,17 @@ function tell(Redis $instance,$channelName,$message){
     //error_log(33333,3,'3.log');
     //var_dump($instance);
     $timeNow= microtime(true);
-    //echo $timeNow."..... ".$message."    ....message:$channelName  \r\n";
+//    echo $timeNow."..... ".$message."    ....message:$channelName  \r\n";
     call_user_func('lPushList',$message.':'.$timeNow);
    // $instance->lPush('list_over_time',$message.':'.$timeNow);
 }
 
 function lPushList($listVal)
 {
-    $redis = new Redis();
-    $redis ->connect('192.168.1.125');
-    $redis ->lPush('over_key',$listVal);
+    static  $redis = null;
+    if(!$redis){
+        $redis = new Redis();
+        $redis ->connect('172.16.61.100',6379);
+    }
+    $redis ->lPush('over_key_list',$listVal);
 }
