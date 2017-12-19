@@ -38,7 +38,7 @@ class CacheClearWorker
            }catch (\Exception $exception){
             error_log(date('Y-m-d H:i:s')."\t"."Message:{$exception->getMessage()}, 
               ClearCacheWork Quit!,ErrorCode:{$exception->getCode()}.\n",3,LOG_PATH.'ClearCacheWork.log');
-            $this->_worker->exit();
+            $this->_worker->exit(0);
         }
     }
 
