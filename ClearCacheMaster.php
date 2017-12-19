@@ -6,7 +6,7 @@ namespace App;
 use App\lib\Config;
 include_once('./application/bootstrap.php');
 
-class ClearCache
+class ClearCacheMaster
 {
     protected $_max_worker_num = 0;
     protected $_lock = null;
@@ -14,12 +14,18 @@ class ClearCache
     protected $_workers = [];//保存worker进程
 
     protected $_after = null;
+    protected $_clearCacheSection=null;
+
 
     public function __construct()
     {
+        $this->_clearCacheSection = Config::getConfig('clearCache_section');
         swoole_set_process_name($this->getConsumerMp());
-        $this->_max_worker_num = Config::getConfig('clearCache_section')->cache_clear_handler->worker_num;
+        $this->_max_worker_num = $this->_clearCacheSection->cache_clear_handler->worker_num;
         self::$_mpid = posix_getpid();
+
+        error_log(date('Y-m-d H:i:s')."\t Message:The ClearCacheMaster MPID[".self::$_mpid."] Start!\n",3
+        ,LOG_PATH."cache_log.txt");
         //设置异步信号监听，回收进程，防止僵尸进程出现
         \swoole_process::signal(SIGCHLD, [$this, 'listenEventWait']);
         $this->_lock = new \swoole_lock(SWOOLE_MUTEX);
@@ -94,7 +100,7 @@ class ClearCache
     public function getConsumerMp()
     {
         $prefix = $this->getMpNamePrefix().':%s';
-        return sprintf($prefix,Config::getConfig()->master->clear_master_name);
+        return sprintf($prefix,$this->_clearCacheSection->master->clear_master_name);
     }
 
 
@@ -103,7 +109,7 @@ class ClearCache
      */
     public  function getMpNamePrefix()
     {
-        return Config::getConfig()->panda_process;
+        return $this->_clearCacheSection->panda_process;
     }
 
     /**
@@ -115,6 +121,6 @@ class ClearCache
     }
 }
 
-$mainProcess = new ClearCache();
-//$mainProcess->start();
-//$mainProcess->after();
+$mainProcess = new ClearCacheMaster();
+$mainProcess->start();
+$mainProcess->after();

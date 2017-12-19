@@ -18,7 +18,7 @@ use App\lib\Config;
 
 include_once('./application/bootstrap.php');
 
-class MasterProcess
+class ConsumerMaster
 {
     protected $_max_worker_num = 0;
     protected $_lock = null;
@@ -127,6 +127,6 @@ class MasterProcess
     }
 }
 
-$mainProcess = new MasterProcess();
+$mainProcess = new ConsumerMaster();
 $mainProcess->start();
 $mainProcess->after();
