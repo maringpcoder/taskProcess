@@ -29,12 +29,4 @@ class ClearCache
         }
     }
 
-
-    public static function testCall(Redis $instance,$channelName,$message)
-    {
-        echo $message.PHP_EOL;
-        error_log($message.PHP_EOL,3,'testCall.log');
-    }
-
-
 }

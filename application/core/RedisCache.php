@@ -27,11 +27,12 @@ class RedisCache
     public function __construct($config,$pconnect=false)
     {
         $this->_config = $config;
+
         if (!$pconnect){
             $this->connect();
+        }else{
+            $this ->pconnect();
         }
-        $this ->pconnect();
-
     }
 
     /**
@@ -44,7 +45,7 @@ class RedisCache
     public static function getSingleRedis($pconnect=false,$type = 'redis_kv_expire')
     {
         try {
-            if (!isset(self::$_instance[$type])) {
+            if (!isset(self::$_instance[$type]) || !(self::$_instance[$type] instanceof RedisCache)) {
                 $config = Config::getConfigArr('redis_env_section');
                 if ($config) {
                     isset($config[$type]) ? $config[$type] : [];
@@ -77,14 +78,14 @@ class RedisCache
             }
 
             if (!$success) {
-                $this->conn = false;
+                $this->_conn = false;
             } elseif (isset($this->_config['password']) && $this->_config['password'] && !$this->_redis->auth($this->_config['password'])) {
-                $this->conn = false;
+                $this->_conn = false;
             } else {
-                $this->conn = true;
+                $this->_conn = true;
             }
         } catch (\RedisException $e) {
-            $this->conn = false;
+            $this->_conn = false;
         }
     }
 
@@ -93,13 +94,9 @@ class RedisCache
     public function pconnect()
     {
         try {
-            if($this->_predis){
-                @$this->_predis->close();
-            }
-
             $this->_predis = new \Redis();
             $this->_predis->pconnect($this->_config['host'],intval($this->_config['password']));
-            $this->conn = true;
+            $this->_conn = true;
         } catch (\RedisException $e) {
             $this->conn = false;
             throw new \Exception($e->getMessage(),$e->getCode());
@@ -116,19 +113,28 @@ class RedisCache
     {
         try {
             if ($this->_conn) {
-                $this->_predis->subscribe([$channelName], $callbackArr);
+                $this->_predis->subscribe($channelName, $callbackArr);
+            }else{
+                var_dump($this->_conn);
+                echo "Connect fail \n";
             }
         }catch (\RedisException $exception){
             throw new \Exception($exception->getMessage(),$exception->getCode());
         }
     }
 
-    /**
-     *
-     */
     public function unSubscribe()
     {
         $this->_predis->close();
+    }
+
+    /**
+     * @param $key
+     * @param int $value
+     */
+    public function lpush($key,$value=1)
+    {
+        $this->_redis->lPush($key,serialize($value));//serialize有性能开销,实际如队列需要改写一下这里的逻辑,处理一下value,建议先打包一下
     }
 
 }
