@@ -26,14 +26,14 @@ class AsynRedis
         if(empty($this->_config)){
             throw new \Exception('配置中缺少 ['.$type.']的配置');
         }
-        $this->_redis = new \swoole_redis();
+        $this->_redis_async = new \swoole_redis();
     }
 
     /**
      * @param $type ,redis队列
      * @param null $callback
      */
-    public static function Single($type,$callback=null)
+    public static function Single($type)
     {
         if(! (isset(self::$_AsynRedis[$type]) && (self::$_AsynRedis[$type] instanceof AsynRedis) ))
         {
@@ -44,16 +44,29 @@ class AsynRedis
     public function lpush($key,$value,$callback=null)
     {
         if(!$callback){
-            $callback = function (\swoole_redis $redis_client,$result){
+            $callback = function (\swoole_redis $redis_client,$result)use($key,$value){
                 if($result){
-                    $redis_client->lpush();
+                    $redis_client->lpush($key,$value,function(\swoole_redis $client ,$res){
+                        //todo 加入操作redis队列成功
+                    });
                 }
             };
         }
-        $this->_redis ->connect($this->_config['host'],$this->_config['port'],$callback);
+        $this->_redis_async ->connect($this->_config['host'],$this->_config['port'],$callback);
     }
 
 
-    public function rpush()
-    {}
+    public function rpush($key,$value,$callback=null)
+    {
+        if(!$callback){
+            $callback = function (\swoole_redis $redis_client,$result)use($key,$value){
+                if($result){
+                    $redis_client->lpush($key,$value,function(\swoole_redis $client ,$res){
+                        //todo 加入操作redis队列成功
+                    });
+                }
+            };
+        }
+        $this->_redis_async ->connect($this->_config['host'],$this->_config['port'],$callback);
+    }
 }
