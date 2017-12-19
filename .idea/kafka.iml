@@ -7,11 +7,9 @@
     <orderEntry type="module-library">
       <library name="PHP" type="php">
         <CLASSES>
-          <root url="file://D:/php-rdkafka-stubs" />
           <root url="file://E:/swoole-ide-helper" />
         </CLASSES>
         <SOURCES>
-          <root url="file://D:/php-rdkafka-stubs" />
           <root url="file://E:/swoole-ide-helper" />
         </SOURCES>
       </library>
