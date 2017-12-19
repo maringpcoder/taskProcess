@@ -35,7 +35,7 @@ for ($n=0 ; $n<10000;$n++){//模拟5W并发
             if($redis->ExpireAt('USER_CACHE_OVERDUE:'.$value.$tmpFix,$cache_over_time)==FALSE){
                 echo "Fail!".PHP_EOL;
             };
-            usleep();//100毫秒
+            usleep(100);//100毫秒
         }
     }
 
