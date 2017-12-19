@@ -40,8 +40,8 @@
       <file leaf-file-name="CacheClearWorker.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/application/worker/CacheClearWorker.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="289">
-              <caret line="74" column="44" lean-forward="true" selection-start-line="74" selection-start-column="44" selection-end-line="74" selection-end-column="44" />
+            <state relative-caret-position="-251">
+              <caret line="35" column="32" lean-forward="false" selection-start-line="35" selection-start-column="32" selection-end-line="35" selection-end-column="32" />
               <folding>
                 <element signature="e#6#115#0#PHP" expanded="true" />
                 <element signature="e#139#164#0#PHP" expanded="true" />
@@ -517,11 +517,18 @@
       <option name="project" value="LOCAL" />
       <updated>1513668243767</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="redis key过期事件订阅">
+      <created>1513668450150</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1513668450150</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="67832000" />
+    <option name="totallyTimeSpent" value="67858000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
@@ -906,8 +913,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/application/worker/CacheClearWorker.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="74" column="44" lean-forward="true" selection-start-line="74" selection-start-column="44" selection-end-line="74" selection-end-column="44" />
+        <state relative-caret-position="-251">
+          <caret line="35" column="32" lean-forward="false" selection-start-line="35" selection-start-column="32" selection-end-line="35" selection-end-column="32" />
           <folding>
             <element signature="e#6#115#0#PHP" expanded="true" />
             <element signature="e#139#164#0#PHP" expanded="true" />

@@ -33,7 +33,7 @@ class CacheClearWorker
     public function workerStart()
     {
         try {
-            swoole_timer_tick(3000,[$this,'checkMainProcessIFexists'],$this->_worker);
+            swoole_timer_tick(10000,[$this,'checkMainProcessIFexists'],$this->_worker);
             ClearCache::run();
            }catch (\Exception $exception){
             error_log(date('Y-m-d H:i:s')."\t"."Message:{$exception->getMessage()}, 
