@@ -47,7 +47,7 @@ class RedisCacheClear
     {
         switch ($channelName){
             case ClearCache::KEY_EVENT_EXPIRED://加入到redis用户过期数据队列中,并记录何时过期的时间戳
-                $this->_redisCache->lpush(self::$_list_key_conf[$channelName],unserialize($message));
+                $this->_redisCache->lpush(self::$_list_key_conf[$channelName],serialize($message));
                 break;
             default:
                 break;
