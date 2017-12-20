@@ -15,10 +15,22 @@ use App\worker\job\ClearCache;
 class RedisCacheClear
 {
     /** @var $_redisCache AsynRedis */
-    public  $_redisCache;
+    protected $_redisCache;
+    protected static $_single =null;
     public function __construct()
     {
         $this->_redisCache = AsynRedis::Single('redis_list');
+    }
+
+    /**
+     * 获取单例
+     */
+    public static function getSingle()
+    {
+        if(!(self::$_single instanceof self)){
+            self::$_single = new RedisCacheClear();
+        }
+        return self::$_single;
     }
 
     /**
