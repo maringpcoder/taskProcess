@@ -31,7 +31,8 @@ class AsynRedis
 
     /**
      * @param $type ,redis队列
-     * @param null $callback
+     * @param null ,$callback
+     * @return self
      */
     public static function Single($type)
     {
@@ -55,7 +56,8 @@ class AsynRedis
                 }
             };
         }
-        $this->_redis_async_client ->connect($this->_config['host'],$this->_config['port'],$callback);
+
+        $this->_redis_async_client ->connect($this->_config['host'],intval($this->_config['port']),function($client,$res){});
     }
 
 

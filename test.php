@@ -5,6 +5,12 @@
  * Date: 2017/12/18
  * Time: 22:04
  */
+namespace App;
+use App\core\AsynRedis;
+
+AsynRedis::Single('redis_list')->lpush('MY_LL','AAAA');exit();
+
+
 $redis = new swoole_redis();
 
 try {
@@ -18,6 +24,7 @@ try {
 function lpuuu(swoole_redis $redisClient, $result)
 {
     try {
+        var_dump($result);
         if ($result!==false) {
             $result && $redisClient->lpush('my_list', time(), function (swoole_redis $client, $res) {
                 return [$res];
