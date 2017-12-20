@@ -60,6 +60,7 @@ class RedisCacheClear
 
     protected function pushList($key,$value)
     {
+        echo time().PHP_EOL;
         return $this->_redis->lpush($key,$value);
     }
 
