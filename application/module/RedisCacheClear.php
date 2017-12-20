@@ -17,6 +17,10 @@ class RedisCacheClear
     /** @var $_redisCache AsynRedis */
     protected $_redisCache;
     protected static $_single =null;
+    protected static $_list_key_conf = [
+        ClearCache::KEY_EVENT_EXPIRED=>'redis_kv_expire'
+    ];
+
     public function __construct()
     {
         $this->_redisCache = AsynRedis::Single('redis_list');
@@ -42,8 +46,8 @@ class RedisCacheClear
     public  function joinExpiredListHandler(\Redis $instance,$channelName,$message)
     {
         switch ($channelName){
-            case ClearCache::KEY_EVENT_EXPIRED://加入到redis用户过期数据队列中
-                $this->_redisCache->lpush($message,serialize(time()));
+            case ClearCache::KEY_EVENT_EXPIRED://加入到redis用户过期数据队列中,并记录何时过期的时间戳
+                $this->_redisCache->lpush(self::$_list_key_conf[$channelName],unserialize($message));
                 break;
             default:
                 break;
