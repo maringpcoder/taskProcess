@@ -20,7 +20,7 @@ $keysOverTimeTodo = array(
 $now = time();
 $cache_over_time= $now+10;
 
-for ($n=0 ; $n<1000;$n++){//模拟5W并发
+for ($n=0 ; $n<10000;$n++){//模拟5W并发
     if($n==0){
         foreach ($keysOverTimeTodo as $key=>$value)
         {
