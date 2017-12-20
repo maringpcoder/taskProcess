@@ -11,7 +11,7 @@ namespace App\core;
 use App\lib\Config;
 class AsynRedis
 {
-    protected $_redis_async ;
+    protected $_redis_async_client ;
     protected $_config=[];
     protected $_configObject=null;
     protected static $_AsynRedis = null;
@@ -26,7 +26,7 @@ class AsynRedis
         if(empty($this->_config)){
             throw new \Exception('配置中缺少 ['.$type.']的配置');
         }
-        $this->_redis_async = new \swoole_redis();
+        $this->_redis_async_client = new \swoole_redis();
     }
 
     /**
@@ -53,7 +53,7 @@ class AsynRedis
                 }
             };
         }
-        $this->_redis_async ->connect($this->_config['host'],$this->_config['port'],$callback);
+        $this->_redis_async_client ->connect($this->_config['host'],$this->_config['port'],$callback);
     }
 
 
@@ -68,6 +68,6 @@ class AsynRedis
                 }
             };
         }
-        $this->_redis_async ->connect($this->_config['host'],$this->_config['port'],$callback);
+        $this->_redis_async_client ->connect($this->_config['host'],$this->_config['port'],$callback);
     }
 }
