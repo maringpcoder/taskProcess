@@ -7,8 +7,10 @@
  */
 namespace App\config;
 class AppConf{
-
-    const OVER_CACHE_KEY_ARR = [
-        ''
+    /**
+     * 需要处理的缓存key
+     */
+    const EXPIRE_KEY=[
+            ''
     ];
 }

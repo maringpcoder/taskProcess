@@ -73,7 +73,7 @@ class CacheClearWorker
     public function checkMainProcessIFexists($timerId,$worker)
     {
         $mpId = ClearCacheMaster::getMpId();
-        error_log('time:'.time().PHP_EOL,3,LOG_PATH.'check.log');
+        error_log('time:'.time().PHP_EOL,3,LOG_PATH.'CacheClearWorkerCheck.log');
         if(!\swoole_process::kill($mpId,0)){//父进程已经不存在,退出当前worker,回收进程资源
             error_log(date('Y-m-d H:i:s')."\t"."Message: ticket[{$timerId}] check ClearCacheWork Quit!",3,LOG_PATH.'ClearCacheWork.log');
             $worker->exit();

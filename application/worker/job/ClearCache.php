@@ -11,10 +11,10 @@ namespace App\worker\job;
 
 
 use App\core\RedisCache;
-use Redis;
 
 class ClearCache
 {
+
     CONST KEY_EVENT_EXPIRED = '__keyevent@0__:expired';
     /**
      * 开始工作
@@ -23,7 +23,7 @@ class ClearCache
     {
         try {
             $pRedis = RedisCache::getSingleRedis(true);
-            $pRedis ->subscribe([self::KEY_EVENT_EXPIRED],['App\worker\job\ClearCache','testCall']);
+            $pRedis ->subscribe([self::KEY_EVENT_EXPIRED],['App\module\RedisCacheClear','joinExpiredListHandler']);
         }catch (\Exception $exception){
             throw new \Exception($exception->getMessage(),$exception->getCode());
         }

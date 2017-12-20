@@ -7,16 +7,34 @@
  */
 $redis = new swoole_redis();
 
-$redis->connect('172.16.61.100',6379,'lpuuu');
-
-function lpuuu(swoole_redis $redisClient,$result){
-    $result && $redisClient->lpush('my_list',time(),function(swoole_redis $client ,$res){
-        var_dump($res);
-    });
-//    var_dump($result);
-//    $redisClient->set()
+try {
+    $combile = $redis->connect('172.16.61.100', 6379, 'lpuuu');
+}catch (Exception $e){
+    echo $e->getMessage();
 }
+//var_dump($combile);
 
+
+function lpuuu(swoole_redis $redisClient, $result)
+{
+    try {
+        if ($result!==false) {
+            $result && $redisClient->lpush('my_list', time(), function (swoole_redis $client, $res) {
+                return [$res];
+            });
+//    var_dump($result);
+//    $redisClient->set();
+        } else {
+            var_dump($result);
+            throw new Exception($result);
+//            throw new Exception($redisClient->errCode);
+        }
+    }catch (Exception $exception){
+        echo var_dump($exception->getMessage());
+        //throw new Exception($exception->getMessage());
+    }
+
+}
 die();
 
 

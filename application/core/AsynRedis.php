@@ -46,10 +46,12 @@ class AsynRedis
     {
         if(!$callback){
             $callback = function (\swoole_redis $redis_client,$result)use($key,$value){
-                if($result){
+                if($result!==false){
                     $redis_client->lpush($key,$value,function(\swoole_redis $client ,$res){
-                        //todo 加入操作redis队列成功
+                        return $res;
                     });
+                }else{//链接redis server 失败
+                    return array('code'=>$redis_client->errCode,'msg'=>$redis_client->errMsg);
                 }
             };
         }

@@ -11,7 +11,6 @@
 namespace App\core;
 
 use App\lib\Config;
-use RdKafka\Exception;
 
 class RedisCache
 {
