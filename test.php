@@ -1,20 +1,11 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: marin
- * Date: 2017/12/18
- * Time: 22:04
- */
-namespace App;
-use App\core\AsynRedis;
-
-AsynRedis::Single('redis_list')->lpush('MY_LL','AAAA');exit();
-
 
 $redis = new swoole_redis();
+$redis->connect('172.16.61.100', 6379, function($c,$r){});
 
 try {
-    $combile = $redis->connect('172.16.61.100', 6379, 'lpuuu');
+    $combile = $redis->connect('172.16.61.100', 6379, function($c,$r){});
+
 }catch (Exception $e){
     echo $e->getMessage();
 }
@@ -26,9 +17,10 @@ function lpuuu(swoole_redis $redisClient, $result)
     try {
         var_dump($result);
         if ($result!==false) {
-            $result && $redisClient->lpush('my_list', time(), function (swoole_redis $client, $res) {
-                return [$res];
-            });
+//            $result && $redisClient->lpush('my_list', time(), function (swoole_redis $client, $res) {
+//                return [$res];
+//            });
+            $redisClient->set('key','swool',function($client,$result){});
 //    var_dump($result);
 //    $redisClient->set();
         } else {
@@ -36,7 +28,7 @@ function lpuuu(swoole_redis $redisClient, $result)
             throw new Exception($result);
 //            throw new Exception($redisClient->errCode);
         }
-    }catch (Exception $exception){
+    }catch (\Exception $exception){
         echo var_dump($exception->getMessage());
         //throw new Exception($exception->getMessage());
     }

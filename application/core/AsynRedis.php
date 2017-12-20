@@ -1,4 +1,6 @@
 <?php
+namespace App\core;
+use App\lib\Config;
 /**
  * 异步redis客户端
  * Created by PhpStorm.
@@ -7,8 +9,7 @@
  * Time: 18:00
  */
 
-namespace App\core;
-use App\lib\Config;
+
 class AsynRedis
 {
     protected $_redis_async_client ;
@@ -48,16 +49,18 @@ class AsynRedis
         if(!$callback){
             $callback = function (\swoole_redis $redis_client,$result)use($key,$value){
                 if($result!==false){
-                    $redis_client->lpush($key,$value,function(\swoole_redis $client ,$res){
-                        return $res;
+                    return $redis_client->lpush($key,$value,function(\swoole_redis $client ,$res){
+//                        return $res;
+                        $client->close();
                     });
+
                 }else{//链接redis server 失败
                     return array('code'=>$redis_client->errCode,'msg'=>$redis_client->errMsg);
                 }
             };
         }
 
-        $this->_redis_async_client ->connect($this->_config['host'],intval($this->_config['port']),function($client,$res){});
+        $this->_redis_async_client ->connect($this->_config['host'],intval($this->_config['port']),$callback);
     }
 
 
