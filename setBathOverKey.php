@@ -18,7 +18,7 @@ $keysOverTimeTodo = array(
     );
 
 $now = time();
-$cache_over_time= $now+10;
+$cache_over_time= $now+60;
 
 for ($n=0 ; $n<10000;$n++){//模拟5W并发
     if($n==0){
