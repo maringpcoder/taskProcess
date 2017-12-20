@@ -31,6 +31,7 @@ class AsynRedis
     }
 
     /**
+     * 订阅消息端切勿使用该方法
      * @param $type ,redis队列
      * @param null ,$callback
      * @return self
@@ -47,14 +48,20 @@ class AsynRedis
     public function lpush($key,$value,$callback=null)
     {
         if(!$callback){
+
             $callback = function (\swoole_redis $redis_client,$result)use($key,$value){
+
                 if($result!==false){
                     return $redis_client->lpush($key,$value,function(\swoole_redis $client ,$res){
-//                        return $res;
-                        $client->close();
+
+                        if($res){
+                            $client->close();
+                        }
+
                     });
 
                 }else{//链接redis server 失败
+                    var_dump($result);
                     return array('code'=>$redis_client->errCode,'msg'=>$redis_client->errMsg);
                 }
             };

@@ -10,20 +10,22 @@
 namespace App\module;
 
 use App\core\AsynRedis;
+use App\core\RedisCache;
 use App\worker\job\ClearCache;
 
 class RedisCacheClear
 {
     /** @var $_redisCache AsynRedis */
-    protected $_redisCache;
+    protected $_redis;
     protected static $_single =null;
     protected static $_list_key_conf = [
-        ClearCache::KEY_EVENT_EXPIRED=>'redis_kv_expire'
+        ClearCache::KEY_EVENT_EXPIRED=>'panda_user_expire'
     ];
+
 
     public function __construct()
     {
-        $this->_redisCache = AsynRedis::Single('redis_list');
+        $this->_redis = RedisCache::getSingleRedis(false,'redis_list');
     }
 
     /**
@@ -47,11 +49,18 @@ class RedisCacheClear
     {
         switch ($channelName){
             case ClearCache::KEY_EVENT_EXPIRED://加入到redis用户过期数据队列中,并记录何时过期的时间戳
-                $this->_redisCache->lpush(self::$_list_key_conf[$channelName],serialize($message));
+                if(call_user_func([$this,'pushList'],self::$_list_key_conf[$channelName],$message)===false){
+                    error_log(date('Y-m-d H:i:s')."\t"." $message 加入redis队列失败!".PHP_EOL,3,LOG_PATH."join_redis_err.log");
+                }
                 break;
             default:
                 break;
         }
+    }
+
+    protected function pushList($key,$value)
+    {
+        return $this->_redis->lpush($key,$value);
     }
 
 }

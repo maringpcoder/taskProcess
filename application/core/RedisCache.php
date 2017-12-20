@@ -114,7 +114,6 @@ class RedisCache
             if ($this->_conn) {
                 $this->_predis->subscribe($channelName, $callbackArr);
             }else{
-                var_dump($this->_conn);
                 echo "Connect fail \n";
             }
         }catch (\RedisException $exception){
@@ -130,10 +129,11 @@ class RedisCache
     /**
      * @param $key
      * @param int $value
+     * @return mixed
      */
     public function lpush($key,$value=1)
     {
-        $this->_redis->lPush($key,serialize($value));//serialize有性能开销,实际如队列需要改写一下这里的逻辑,处理一下value,建议先打包一下
+        return $this->_redis->lPush($key,serialize($value));//serialize有性能开销,实际如队列需要改写一下这里的逻辑,处理一下value,建议先打包一下
     }
 
 }
