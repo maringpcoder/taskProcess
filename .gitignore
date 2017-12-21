@@ -1,2 +1,4 @@
 .idea/kafka.iml
 /.idea
+/.gitignore
+/env.ini

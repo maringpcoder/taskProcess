@@ -8,7 +8,7 @@
  */
 
 $redis = new Redis();
-$redis ->connect('172.16.61.100');
+$redis ->connect('192.168.1.125');
 $keysOverTimeTodo = array(
     '674_122',
     '66523_112222',
