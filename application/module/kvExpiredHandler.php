@@ -36,7 +36,9 @@ class kvExpiredHandler
 
     public function deleteExpireField($data)
     {
-        list($uid,$nid) = each($data);
+        $list=explode(':',$data);
+        list($prefix,$expireKey) = $list;
+        list($uid,$nid) = $expireKey;
         foreach (AppConf::EXPIRE_KEY as $value) {
             $this->_arCache->hDel($value,$uid);
         }
