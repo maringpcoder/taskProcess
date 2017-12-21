@@ -27,8 +27,8 @@ class kvExpiredHandler
 
     public function run()
     {
+        swoole_timer_tick(10000, [$this, 'checkMainProcessIFexists'], $this->_worker);
         while (1) {
-            swoole_timer_tick(10000, [$this, 'checkMainProcessIFexists'], $this->_worker);
             $data = $this->_redis->rpop(RedisCacheClear::$_list_key_conf[ClearCache::KEY_EVENT_EXPIRED]);
             $this->deleteExpireField($data);
         }
