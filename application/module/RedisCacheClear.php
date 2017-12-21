@@ -1,5 +1,6 @@
 <?php
 /**
+ * @description 接收订阅消息写入到redis
  * 由于订阅可能存在并发,以及环境因素导致订阅消息处理不及时或消费不过来而影响redis自身性能的缘故，所以考虑加入到redis队列中,将消息持久化
  * 后边采用多开进程来处理这部分队列
  * Created by PhpStorm.
@@ -18,7 +19,7 @@ class RedisCacheClear
     /** @var $_redisCache AsynRedis */
     protected $_redis;
     protected static $_single =null;
-    protected static $_list_key_conf = [
+    public static $_list_key_conf = [
         ClearCache::KEY_EVENT_EXPIRED=>'panda_user_expire'
     ];
 
@@ -52,6 +53,7 @@ class RedisCacheClear
                 if(call_user_func([$this,'pushList'],self::$_list_key_conf[$channelName],$message)===false){
                     error_log(date('Y-m-d H:i:s')."\t"." $message 加入redis队列失败!".PHP_EOL,3,LOG_PATH."join_redis_err.log");
                 }
+
                 break;
             default:
                 break;
@@ -60,8 +62,6 @@ class RedisCacheClear
 
     protected function pushList($key,$value)
     {
-        echo time().PHP_EOL;
         return $this->_redis->lpush($key,$value);
     }
-
 }

@@ -17,7 +17,11 @@
 
 namespace App;
 use App\core\AsynRedis;
+use App\server\PandaTaskServer;
 
 include_once('./application/bootstrap.php');
-$AsynRedis = AsynRedis::Single('redis_list');
-$AsynRedis ->lpush("my_task",time());
+//$AsynRedis = AsynRedis::Single('redis_list');
+//$AsynRedis ->lpush("my_task",time());
+
+$pandaTaskServer = new PandaTaskServer();
+$pandaTaskServer->Start();
