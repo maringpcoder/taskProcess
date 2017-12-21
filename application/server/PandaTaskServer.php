@@ -18,16 +18,18 @@ class PandaTaskServer
     protected $_processWorker = [];
     protected $_maxProcessSize;
     protected $_lock;
+    protected static $_mpId=null;
 
     public function __construct()
     {
         $this->_config = Config::getConfigArr('panda_server_section');
         swoole_set_process_name($this->getConsumerMp());
         $this->_lock = new \swoole_lock(SWOOLE_MUTEX);
+        self::$_mpId = posix_getpid();
         \swoole_process::signal(SIGCHLD,[$this,'waitExit']);
     }
 
-    public function waitExit()
+    protected function waitExit()
     {
         while($process=\swoole_process::wait(false)){
             $this->_lock->lock();
@@ -37,6 +39,11 @@ class PandaTaskServer
             $this->_lock->unlock();
         }
         $this->Start();
+    }
+
+    public static function getMpId()
+    {
+        return self::$_mpId;
     }
 
     /**
@@ -50,7 +57,7 @@ class PandaTaskServer
     /**
      * 取出队列数据,处理过期数据
      */
-    public function kvExpiredHandler()
+    protected function kvExpiredHandler()
     {
         $this->_lock ->lock();
         try{
@@ -76,7 +83,7 @@ class PandaTaskServer
      * 获取主进程名称
      * panda_process:log-kafka
      */
-    public function getConsumerMp()
+    protected function getConsumerMp()
     {
         $prefix = $this->getMpNamePrefix().':%s';
         return sprintf($prefix,$this->_config['panda_process_master']);
@@ -86,7 +93,7 @@ class PandaTaskServer
     /**
      * 获取主进程前缀名
      */
-    public  function getMpNamePrefix()
+    protected  function getMpNamePrefix()
     {
         return $this->_config['panda_process'];
     }
