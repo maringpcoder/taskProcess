@@ -1,43 +1,32 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: marin
- * Date: 2017/12/20
- * Time: 22:35
- */
 
-class MySplHeap extends SplMaxHeap
+ini_set('default_socket_timeout', -1);  //不超时
+try{
+    $redis = new Redis();
+    $redis->pconnect('172.16.61.100', 6379);
+    $redis->subscribe(array('__keyevent@0__:expired'),'tell');
+}catch (RedisException $e){
+    echo 'Error:'.$e->getMessage()."\r\n";
+}
+//$result=$redis->subscribe(array('中央广播电台'), 'tell');
+
+function tell(Redis $instance,$channelName,$message){
+    //error_log(33333,3,'3.log');
+    //var_dump($instance);
+    $timeNow= microtime(true);
+//    echo $timeNow."..... ".$message."    ....message:$channelName  \r\n";
+    call_user_func('lPushList',$message.':'.$timeNow);
+   // $instance->lPush('list_over_time',$message.':'.$timeNow);
+}
+
+function lPushList($listVal)
 {
-    /**
-     * Compare elements in order to place them correctly in the heap while sifting up.
-     * @link http://php.net/manual/en/splheap.compare.php
-     * @param mixed $value1 <p>
-     * The value of the first node being compared.
-     * </p>
-     * @param mixed $value2 <p>
-     * The value of the second node being compared.
-     * </p>
-     * @return int Result of the comparison, positive integer if <i>value1</i> is greater than <i>value2</i>, 0 if they are equal, negative integer otherwise.
-     * </p>
-     * <p>
-     * Having multiple elements with the same value in a Heap is not recommended. They will end up in an arbitrary relative position.
-     * @since 5.3.0
-     */
-    protected function compare($value1, $value2)
-    {
-        // TODO: Implement compare() method.
-        return ($value1 - $value2);
+    static  $redis = null;
+    if(!$redis){
+        $redis = new swoole_redis();
+        $redis ->connect('172.16.61.100',6379,function ($client,$rs)use ($listVal){
+            $client ->lPush('over_key_list',$listVal);
+        });
     }
-}
 
-$mh = new MySplHeap();
-$data= array();
-$vitem = [23,12,54,2,45,24,11,9,98];
-foreach ($vitem as $value){
-    $mh ->insert($value);
 }
-while(!$mh->isEmpty()){
-    $data[]=$mh->extract();
-}
-print_r($data);
-

@@ -11,6 +11,7 @@ class AppConf{
      * 需要处理的缓存key
      */
     const EXPIRE_KEY=[
-            ''
+            'users.id',
+            'active.id'
     ];
 }

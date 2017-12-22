@@ -17,10 +17,10 @@ class AsynRedis
     protected $_configObject=null;
     protected static $_AsynRedis = null;
 
-    public function __construct(string $type='redis_list')
+    public function __construct(string $type='redis_list',$configSection='redis_env_section')
     {
-        $this->_configObject = Config::getConfig('redis_env_section');
-        $config = Config::getConfigArr('redis_env_section');
+        $this->_configObject = Config::getConfig($configSection);
+        $config = Config::getConfigArr($configSection);
         if(isset($config[$type])){
             $this->_config = $config[$type];
         }
@@ -36,11 +36,11 @@ class AsynRedis
      * @param null ,$callback
      * @return self
      */
-    public static function Single($type)
+    public static function Single($type,$configSection='redis_env_section')
     {
         if(! (isset(self::$_AsynRedis[$type]) && (self::$_AsynRedis[$type] instanceof AsynRedis) ))
         {
-            self::$_AsynRedis[$type] = new self($type);
+            self::$_AsynRedis[$type] = new self($type,$configSection);
         }
         return self::$_AsynRedis[$type];
     }
@@ -80,6 +80,25 @@ class AsynRedis
                         //todo 加入操作redis队列成功
                     });
                 }
+            };
+        }
+        $this->_redis_async_client ->connect($this->_config['host'],$this->_config['port'],$callback);
+    }
+
+    public function rpop($key,$callback=null)
+    {
+        if(!$callback){
+            $callback = function (\swoole_redis $redis_client,$result)use($key){
+                if($result){
+                    $listData=$redis_client ->rpop($key,function (\swoole_redis $client,$listData){
+                        //todo取队列成功
+                        return $listData;
+                    });
+                    return $listData;
+                }else{
+                    return false;
+                }
+
             };
         }
         $this->_redis_async_client ->connect($this->_config['host'],$this->_config['port'],$callback);

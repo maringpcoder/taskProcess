@@ -49,7 +49,8 @@ class ConsumerMaster
                 //统一子进程执行入口方法
                 $process = new \swoole_process(['\\App\\worker\\Worker', 'Start'], false, false);
                 $chId = $process->start();
-                $this->_workers[strval($chId)] = time();
+                $this->_workers[strval($chId)] = microtime(true);
+                usleep(200);
             }
         } catch (\Exception $exception) {
 

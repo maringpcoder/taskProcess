@@ -133,7 +133,17 @@ class RedisCache
      */
     public function lpush($key,$value=1)
     {
+
         return $this->_redis->lPush($key,serialize($value));//serialize有性能开销,实际如队列需要改写一下这里的逻辑,处理一下value,建议先打包一下
     }
 
+    public function rpop($key)
+    {
+        return $this->_redis->rPop($key);
+    }
+
+    public function hDel($key,$field)
+    {
+        return $this->_redis->hDel($key,$field);
+    }
 }
