@@ -62,6 +62,7 @@ class RedisCacheClear
 
     protected function pushList($key,$value)
     {
+        var_dump($this->_redis);
         return $this->_redis->lpushPon($key,$value);
     }
 }
