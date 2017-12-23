@@ -30,9 +30,10 @@ class kvExpiredHandler
 
     public function run(\swoole_process $worker)
     {
+
         $this->_worker = $worker;
         swoole_set_process_name($this->getProcessName());
-        swoole_timer_tick(10000, [$this, 'checkMainProcessIFexists'], $this->_worker);
+        swoole_timer_tick(1000, [$this, 'checkMainProcessIFexists']);
         while (1) {
             $data = $this->_redis->rpopPon(RedisCacheClear::$_list_key_conf[ClearCache::KEY_EVENT_EXPIRED]);
             if (!(empty($data) || $data === false)) {
@@ -70,13 +71,13 @@ class kvExpiredHandler
      * @param $timerId
      * @param \swoole_process $worker
      */
-    public function checkMainProcessIFexists($timerId,$worker)
+    public function checkMainProcessIFexists($timerId)
     {
         $mpId = PandaTaskServer::getMpId();
         error_log('time:'.time().PHP_EOL,3,LOG_PATH.'PandaTaskServer.log');
         if(!\swoole_process::kill($mpId,0)){//父进程已经不存在,退出当前worker,回收进程资源
             error_log(date('Y-m-d H:i:s')."\t"."Message: ticket[{$timerId}] check PandaTaskServer Quit!",3,LOG_PATH.'PandaTaskServer.log');
-            $worker->exit();
+            $this->_worker->exit();
             swoole_timer_clear($timerId);
         }
     }

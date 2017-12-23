@@ -23,7 +23,7 @@ class CacheClearWorker
         $this->_worker = $worker;
         $this->_clearCacheSection = Config::getConfig('clearCache_section');
         swoole_set_process_name(sprintf($this->getWorkerProcessName().':%s','worker'));
-        error_log(date('Y-m-d H:i:s')."\t: The Worker Process Worker Start!".PHP_EOL,3,'ClearCacheWork.log');
+        error_log(date('Y-m-d H:i:s')."\t: The Worker Process Worker Start!".PHP_EOL,3,LOG_PATH.'ClearCacheWork.log');
         $this->workerStart();
     }
 
@@ -33,7 +33,7 @@ class CacheClearWorker
     public function workerStart()
     {
         try {
-            swoole_timer_tick(10000,[$this,'checkMainProcessIFexists'],$this->_worker);
+            swoole_timer_tick(10000,[$this,'checkMainProcessIFexists']);
             ClearCache::run();
            }catch (\Exception $exception){
             error_log(date('Y-m-d H:i:s')."\t"."Message:{$exception->getMessage()}, 
@@ -76,7 +76,7 @@ class CacheClearWorker
         error_log('time:'.time().PHP_EOL,3,LOG_PATH.'CacheClearWorkerCheck.log');
         if(!\swoole_process::kill($mpId,0)){//父进程已经不存在,退出当前worker,回收进程资源
             error_log(date('Y-m-d H:i:s')."\t"."Message: ticket[{$timerId}] check ClearCacheWork Quit!",3,LOG_PATH.'ClearCacheWork.log');
-            $worker->exit();
+            $this->_worker->exit();
             swoole_timer_clear($timerId);
         }
     }
