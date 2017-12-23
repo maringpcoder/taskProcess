@@ -9,7 +9,7 @@
  */
 
 namespace App\worker;
-use App\ClearCacheMaster;
+use App\subscribleMaster;
 use App\lib\Config;
 use App\worker\job\ClearCache;
 
@@ -18,12 +18,13 @@ class CacheClearWorker
     protected $_worker = null;
     public $_clearCacheSection = null;
 
-    public function __construct()
+    public function __construct(\swoole_process $worker)
     {
+        $this->_worker = $worker;
         $this->_clearCacheSection = Config::getConfig('clearCache_section');
         swoole_set_process_name(sprintf($this->getWorkerProcessName().':%s','worker'));
         error_log(date('Y-m-d H:i:s')."\t: The Worker Process Worker Start!".PHP_EOL,3,'ClearCacheWork.log');
-
+        $this->workerStart();
     }
 
     /**
@@ -43,8 +44,7 @@ class CacheClearWorker
 
     public  function Start(\swoole_process $worker)
     {
-        $this->_worker = $worker;
-        $this->workerStart();
+        new self($worker);
     }
 
 
@@ -70,9 +70,9 @@ class CacheClearWorker
      * @param $timerId
      * @param \swoole_process $worker
      */
-    public function checkMainProcessIFexists($timerId,$worker)
+    public function checkMainProcessIFexists($timerId, $worker)
     {
-        $mpId = ClearCacheMaster::getMpId();
+        $mpId = subscribleMaster::getMpId();
         error_log('time:'.time().PHP_EOL,3,LOG_PATH.'CacheClearWorkerCheck.log');
         if(!\swoole_process::kill($mpId,0)){//父进程已经不存在,退出当前worker,回收进程资源
             error_log(date('Y-m-d H:i:s')."\t"."Message: ticket[{$timerId}] check ClearCacheWork Quit!",3,LOG_PATH.'ClearCacheWork.log');

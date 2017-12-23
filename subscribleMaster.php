@@ -45,8 +45,7 @@ class subscribleMaster
 
             for ($n = 0; $n < $sizeWorker; $n++) {
                 //统一子进程执行入口方法
-                $CacheClearWorker = new CacheClearWorker();
-                $process = new \swoole_process([$CacheClearWorker, 'Start'], false, false);
+                $process = new \swoole_process(['\\App\\worker\\CacheClearWorker', 'Start'], false, false);
                 $chId = $process->start();
                 $this->_workers[strval($chId)] = microtime(true);
                 usleep(200);

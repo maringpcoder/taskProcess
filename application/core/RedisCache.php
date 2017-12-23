@@ -112,13 +112,11 @@ class RedisCache
     {
         try {
             if ($this->_conn) {
+                $this->_predis->setOption(\Redis::OPT_READ_TIMEOUT,-1);
                 $this->_predis->subscribe($channelName, $callbackArr);
-                echo "开始订阅！";
-            }else{
-                echo "Connect fail \n";
             }
         }catch (\RedisException $exception){
-            throw new \Exception($exception->getMessage()."<gogogogogog>",$exception->getCode());
+            throw new \Exception($exception->getMessage()."\t gogogogogog ",$exception->getCode());
         }
     }
 
