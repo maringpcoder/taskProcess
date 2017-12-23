@@ -94,7 +94,7 @@ class RedisCache
     {
         try {
             $this->_predis = new \Redis();
-            $this->_predis->pconnect($this->_config['host'],intval($this->_config['password']));
+            $this->_predis->pconnect($this->_config['host'],intval($this->_config['port']));
             $this->_conn = true;
         } catch (\RedisException $e) {
             $this->conn = false;
@@ -144,6 +144,7 @@ class RedisCache
 
     public function hDel($key,$field)
     {
+        error_log("key:$key ,field:$field",3,LOG_PATH.'hDel.log');
         return $this->_redis->hDel($key,$field);
     }
 }

@@ -11,8 +11,14 @@ $redis = new Redis();
 $redis ->connect('192.168.1.125');
 $keysOverTimeTodo = array(
     'USER_CACHE_OVERDUE:67_67',//uid_netbarId
+    'USER_CACHE_OVERDUE:62_23',//uid_netbarId
+    'USER_CACHE_OVERDUE:77_97',//uid_netbarId
+    'USER_CACHE_OVERDUE:34_67',//uid_netbarId
     );
-
+foreach ($keysOverTimeTodo as $item){
+    $redis ->set($item,time());
+    $redis ->expire($item,180);
+}
 
 
 //

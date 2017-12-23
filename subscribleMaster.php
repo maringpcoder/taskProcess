@@ -5,6 +5,8 @@
  */
 namespace App;
 use App\lib\Config;
+use App\worker\CacheClearWorker;
+
 include_once('./application/bootstrap.php');
 
 class subscribleMaster
@@ -40,9 +42,11 @@ class subscribleMaster
         $this->_lock->lock();
         try {
             $sizeWorker = $this->_max_worker_num - count($this->_workers);
+
             for ($n = 0; $n < $sizeWorker; $n++) {
                 //统一子进程执行入口方法
-                $process = new \swoole_process(['\\App\\worker\\CacheClearWorker', 'Start'], false, false);
+                $CacheClearWorker = new CacheClearWorker();
+                $process = new \swoole_process([$CacheClearWorker, 'Start'], false, false);
                 $chId = $process->start();
                 $this->_workers[strval($chId)] = microtime(true);
                 usleep(200);

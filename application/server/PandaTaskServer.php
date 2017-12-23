@@ -29,7 +29,7 @@ class PandaTaskServer
         \swoole_process::signal(SIGCHLD,[$this,'waitExit']);
     }
 
-    protected function waitExit()
+    public function waitExit()
     {
         while($process=\swoole_process::wait(false)){
             $this->_lock->lock();

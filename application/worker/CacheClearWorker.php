@@ -18,13 +18,12 @@ class CacheClearWorker
     protected $_worker = null;
     public $_clearCacheSection = null;
 
-    public function __construct(\swoole_process $worker)
+    public function __construct()
     {
-        $this->_worker = $worker;
         $this->_clearCacheSection = Config::getConfig('clearCache_section');
         swoole_set_process_name(sprintf($this->getWorkerProcessName().':%s','worker'));
         error_log(date('Y-m-d H:i:s')."\t: The Worker Process Worker Start!".PHP_EOL,3,'ClearCacheWork.log');
-        $this->workerStart();
+
     }
 
     /**
@@ -42,9 +41,10 @@ class CacheClearWorker
         }
     }
 
-    public function Start(\swoole_process $worker)
+    public  function Start(\swoole_process $worker)
     {
-        new self($worker);
+        $this->_worker = $worker;
+        $this->workerStart();
     }
 
 
