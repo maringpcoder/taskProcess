@@ -87,7 +87,7 @@ class PandaTaskServer
     /**
      * 获取主进程前缀名
      */
-    protected  function getMpNamePrefix()
+    public  function getMpNamePrefix()
     {
         return $this->_config['panda_process'];
     }

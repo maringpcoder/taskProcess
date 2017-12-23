@@ -10,6 +10,7 @@ namespace App\module;
 
 use App\config\AppConf;
 use App\core\RedisCache;
+use App\lib\Config;
 use App\server\PandaTaskServer;
 use App\worker\job\ClearCache;
 
@@ -18,11 +19,15 @@ class kvExpiredHandler
     protected $_redis;
     protected $_arCache;
     protected $_worker;
+    protected $_config;
+
     public function __construct(\swoole_process $worker)
     {
         $this->_worker = $worker;
-        $this->_redis = RedisCache::getSingleRedis(false,'redis_list');
-        $this->_arCache = RedisCache::getSingleRedis(false,'redis_kv_expire');
+        $this->_redis = RedisCache::getSingleRedis(false, 'redis_list');
+        $this->_arCache = RedisCache::getSingleRedis(false, 'redis_kv_expire');
+        $this->_config = Config::getConfigArr('panda_server_section');
+        swoole_set_process_name($this->getProcessName());
     }
 
     public function run()
@@ -30,8 +35,21 @@ class kvExpiredHandler
         swoole_timer_tick(10000, [$this, 'checkMainProcessIFexists'], $this->_worker);
         while (1) {
             $data = $this->_redis->rpop(RedisCacheClear::$_list_key_conf[ClearCache::KEY_EVENT_EXPIRED]);
-            $this->deleteExpireField($data);
+            if (!(empty($data) || $data === false)) {
+                $this->deleteExpireField($data);
+            }
         }
+    }
+
+
+    public function getProcessName()
+    {
+        return $this->getProcessPrefix().":".$this->_config['panda_process_child'];
+    }
+
+    public function getProcessPrefix()
+    {
+        return $this->_config['panda_process'];
     }
 
     public function deleteExpireField($data)
