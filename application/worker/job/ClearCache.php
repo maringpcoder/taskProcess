@@ -22,10 +22,9 @@ class ClearCache
     {
         try {
             $pRedis = RedisCache::getSingleRedis(true);
-
             $RedisCacheClear = RedisCacheClear::getSingle();
-
             $pRedis ->subscribe([self::KEY_EVENT_EXPIRED],[$RedisCacheClear,'joinExpiredListHandler']);
+
         }catch (\Exception $exception){
             throw new \Exception($exception->getMessage(),$exception->getCode());
         }

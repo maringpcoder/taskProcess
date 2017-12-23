@@ -118,7 +118,7 @@ class RedisCache
                 echo "Connect fail \n";
             }
         }catch (\RedisException $exception){
-            throw new \Exception($exception->getMessage(),$exception->getCode());
+            throw new \Exception($exception->getMessage()."<gogogogogog>",$exception->getCode());
         }
     }
 
