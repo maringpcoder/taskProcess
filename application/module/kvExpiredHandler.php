@@ -11,7 +11,7 @@ namespace App\module;
 use App\config\AppConf;
 use App\core\RedisCache;
 use App\lib\Config;
-use App\server\PandaTaskServer;
+use App\PandaTaskServer;
 use App\worker\job\ClearCache;
 
 class kvExpiredHandler
@@ -32,12 +32,11 @@ class kvExpiredHandler
     {
         $this->_worker = $worker;
         swoole_set_process_name($this->getProcessName());
-        //swoole_timer_tick(10000, [$this, 'checkMainProcessIFexists'], $this->_worker);
+        swoole_timer_tick(10000, [$this, 'checkMainProcessIFexists'], $this->_worker);
         while (1) {
             $data = $this->_redis->rpopPon(RedisCacheClear::$_list_key_conf[ClearCache::KEY_EVENT_EXPIRED]);
             if (!(empty($data) || $data === false)) {
-                var_dump($data);
-                //$this->deleteExpireField($data);
+                $this->deleteExpireField($data);
             }
         }
     }
@@ -56,10 +55,13 @@ class kvExpiredHandler
     public function deleteExpireField($data)
     {
         $list=explode(':',$data);
-        list($prefix,$expireKey) = $list;
-        list($uid,$nid) = $expireKey;
-        foreach (AppConf::EXPIRE_KEY as $value) {
-            $this->_arCache->hDel($value,$uid);
+        $preList=array_reverse($list);
+        list($expireKey) = $preList;
+        list($uidAsField,$nid) = explode('_',$expireKey);
+
+        foreach (AppConf::EXPIRE_KEY as $hashKey) {
+            $this->_arCache->hDel($hashKey,$uidAsField);
+            echo "KEY:[$hashKey] ,删除用户ID为：".$uidAsField."的用户!".PHP_EOL;
         }
     }
 
