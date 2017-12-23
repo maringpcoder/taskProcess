@@ -21,6 +21,7 @@ class PandaTaskServer
     protected $_lock;
     protected static $_mpId=null;
     protected $_worker;
+    protected $_after;
 
     public function __construct()
     {
@@ -71,7 +72,6 @@ class PandaTaskServer
                 $processId = $process->start();
                 $this->_processWorker[$processId] = microtime(true);
                 usleep(200);
-
             }
         }catch (\Exception $exception){
             //todo kill reboot?
@@ -87,6 +87,8 @@ class PandaTaskServer
         return sprintf($prefix,$this->_config['panda_process_master']);
     }
 
+    //todo 检查子进程是否退出
+
 
     /**
      * 获取主进程前缀名
@@ -95,6 +97,26 @@ class PandaTaskServer
     {
         return $this->_config['panda_process'];
     }
+
+
+    public function after()
+    {
+        $this->_after = swoole_timer_after(3600000, array($this, 'reboot'));
+    }
+
+    public function reboot()
+    {
+        $nowTime = microtime(true);
+        error_log(date('Y-m-d H:i:s')."\t"."Message:PandaServer Ready Reboot!".PHP_EOL,3,LOG_PATH.'PandaServerReboot.log');
+        $process = $this->_processWorker;
+        foreach ($process as $worker =>$StartTime){
+            if($nowTime-$StartTime>(5*3600)){
+                \swoole_process::kill($worker);
+                error_log(date('Y-m-d H:i:s')."\t"."Message:PandaServer  Reboot now!".PHP_EOL,3,LOG_PATH.'PandaServerReboot.log');
+            }
+        }
+    }
 }
 $theServer = new PandaTaskServer();
 $theServer ->Start();
+$theServer ->after();
