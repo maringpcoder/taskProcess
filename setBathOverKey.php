@@ -10,7 +10,7 @@
 $redis = new Redis();
 $redis ->connect('192.168.1.125');
 $keysOverTimeTodo = array(
-    'USER_CACHE_OVERDUE:67_67',
+    'USER_CACHE_OVERDUE:67_67',//uid_netbarId
     );
 
 

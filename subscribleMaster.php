@@ -7,7 +7,7 @@ namespace App;
 use App\lib\Config;
 include_once('./application/bootstrap.php');
 
-class ClearCacheMaster
+class subscribleMaster
 {
     protected $_max_worker_num = 0;
     protected $_lock = null;
@@ -123,6 +123,6 @@ class ClearCacheMaster
     }
 }
 
-$mainProcess = new ClearCacheMaster();
+$mainProcess = new subscribleMaster();
 $mainProcess->start();
 $mainProcess->after();

@@ -77,12 +77,6 @@ class PandaTaskServer
     }
 
 
-
-
-    /**
-     * 获取主进程名称
-     * panda_process:log-kafka
-     */
     protected function getConsumerMp()
     {
         $prefix = $this->getMpNamePrefix().':%s';
