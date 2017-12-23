@@ -33,8 +33,9 @@ class CacheClearWorker
     public function workerStart()
     {
         try {
-            swoole_timer_tick(10000,[$this,'checkMainProcessIFexists']);
+
             ClearCache::run();
+            swoole_timer_tick(10000,[$this,'checkMainProcessIFexists']);
            }catch (\Exception $exception){
             error_log(date('Y-m-d H:i:s')."\t"."Message:{$exception->getMessage()}, 
               ClearCacheWork Quit!,ErrorCode:{$exception->getCode()}.\n",3,LOG_PATH.'ClearCacheWork.log');
@@ -70,14 +71,13 @@ class CacheClearWorker
      * @param $timerId
      * @param \swoole_process $worker
      */
-    public function checkMainProcessIFexists($timerId, $worker)
+    public function checkMainProcessIFexists()
     {
         $mpId = subscribleMaster::getMpId();
         error_log('time:'.time().PHP_EOL,3,LOG_PATH.'CacheClearWorkerCheck.log');
         if(!\swoole_process::kill($mpId,0)){//父进程已经不存在,退出当前worker,回收进程资源
-            error_log(date('Y-m-d H:i:s')."\t"."Message: ticket[{$timerId}] check ClearCacheWork Quit!",3,LOG_PATH.'ClearCacheWork.log');
-            $this->_worker->exit();
-            swoole_timer_clear($timerId);
+            error_log(date('Y-m-d H:i:s')."\t"."Message:  check ClearCacheWork Quit!",3,LOG_PATH.'ClearCacheWork.log');
+            $this->_worker->_exit();
         }
     }
 }

@@ -13,11 +13,21 @@ $keysOverTimeTodo = array(
     'USER_CACHE_OVERDUE:67_67',//uid_netbarId
     'USER_CACHE_OVERDUE:62_23',//uid_netbarId
     'USER_CACHE_OVERDUE:77_97',//uid_netbarId
+    'USER_CACHE_OVERDUE:67_34',//uid_netbarId
+    'USER_CACHE_OVERDUE:67_67',//uid_netbarId
     'USER_CACHE_OVERDUE:34_67',//uid_netbarId
+    'USER_CACHE_OVERDUE:34_617',//uid_netbarId
     );
+$m=0;
+for ($n=0;$n<10;$n++,$m++){
+    $redis ->hSet('users.id',67,time());
+}
+
+echo $m.PHP_EOL;
+
 foreach ($keysOverTimeTodo as $item){
     $redis ->set($item,time());
-    $redis ->expire($item,180);
+    $redis ->expire($item,60);
 }
 
 

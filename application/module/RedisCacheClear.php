@@ -26,7 +26,7 @@ class RedisCacheClear
 
     public function __construct()
     {
-        $this->_redis = RedisCache::getSingleRedis(false,'redis_list');
+        $this->_redis = RedisCache::getSingleRedis(true,'redis_list');
     }
 
     /**
@@ -62,6 +62,6 @@ class RedisCacheClear
 
     protected function pushList($key,$value)
     {
-        return $this->_redis->lpush($key,$value);
+        return $this->_redis->lpushPon($key,$value);
     }
 }
