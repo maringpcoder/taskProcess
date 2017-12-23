@@ -6,10 +6,11 @@
  * Date: 2017/12/21
  * Time: 14:28
  */
-namespace App\server;
+namespace App;
 
-
+include_once('./application/bootstrap.php');
 use App\lib\Config;
+use App\module\kvExpiredHandler;
 
 class PandaTaskServer
 {
@@ -19,10 +20,12 @@ class PandaTaskServer
     protected $_maxProcessSize;
     protected $_lock;
     protected static $_mpId=null;
+    protected $_worker;
 
     public function __construct()
     {
         $this->_config = Config::getConfigArr('panda_server_section');
+        $this->_maxProcessSize = $this->_config['max_process_num'];
         swoole_set_process_name($this->getConsumerMp());
         $this->_lock = new \swoole_lock(SWOOLE_MUTEX);
         self::$_mpId = posix_getpid();
@@ -49,7 +52,7 @@ class PandaTaskServer
     /**
      * 启动
      */
-    public  function Start()
+    public   function Start()
     {
         $this->kvExpiredHandler();
     }
@@ -63,7 +66,8 @@ class PandaTaskServer
         try{
             $currentWorker = $this->_maxProcessSize - count($this->_processWorker);
             for($n=0;$n<$currentWorker;$n++){
-                $process = new \swoole_process(['\\App\\module\\kvExpiredHandler','run']);
+                $kvExpiredHandlerObj = new kvExpiredHandler();
+                $process = new \swoole_process([$kvExpiredHandlerObj,'run']);
                 $processId = $process->start();
                 $this->_processWorker[$processId] = microtime(true);
                 usleep(200);
@@ -77,7 +81,7 @@ class PandaTaskServer
     }
 
 
-    protected function getConsumerMp()
+    public function getConsumerMp()
     {
         $prefix = $this->getMpNamePrefix().':%s';
         return sprintf($prefix,$this->_config['panda_process_master']);
@@ -92,3 +96,5 @@ class PandaTaskServer
         return $this->_config['panda_process'];
     }
 }
+$theServer = new PandaTaskServer();
+$theServer ->Start();

@@ -94,7 +94,7 @@ class RedisCache
     {
         try {
             $this->_predis = new \Redis();
-            $this->_predis->pconnect($this->_config['host'],intval($this->_config['port']));
+            var_dump($this->_predis->pconnect($this->_config['host'],intval($this->_config['port'])));
             $this->_conn = true;
         } catch (\RedisException $e) {
             $this->conn = false;
@@ -133,13 +133,31 @@ class RedisCache
     public function lpush($key,$value=1)
     {
 
-        return $this->_redis->lPush($key,serialize($value));//serialize有性能开销,实际如队列需要改写一下这里的逻辑,处理一下value,建议先打包一下
+        return $this->_predis->lPush($key,serialize($value));//serialize有性能开销,实际如队列需要改写一下这里的逻辑,处理一下value,建议先打包一下
     }
+
+    public function lpushPon($key,$value=1)
+    {
+
+        return $this->_predis->lPush($key,serialize($value));//serialize有性能开销,实际如队列需要改写一下这里的逻辑,处理一下value,建议先打包一下
+    }
+
 
     public function rpop($key)
     {
         return $this->_redis->rPop($key);
     }
+    public function rpopPon($key)
+    {
+        try {
+            $this->_predis->setOption(\Redis::OPT_READ_TIMEOUT,-1);
+            return $this->_predis->rPop($key);
+        }catch (\RedisException $e){
+            echo $e->getMessage();
+        }
+    }
+
+
 
     public function hDel($key,$field)
     {

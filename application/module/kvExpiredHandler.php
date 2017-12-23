@@ -21,22 +21,23 @@ class kvExpiredHandler
     protected $_worker;
     protected $_config;
 
-    public function __construct(\swoole_process $worker)
+    public function __construct()
     {
-        $this->_worker = $worker;
-        $this->_redis = RedisCache::getSingleRedis(false, 'redis_list');
+        $this->_redis = RedisCache::getSingleRedis(true, 'redis_list');
         $this->_arCache = RedisCache::getSingleRedis(false, 'redis_kv_expire');
         $this->_config = Config::getConfigArr('panda_server_section');
-        swoole_set_process_name($this->getProcessName());
     }
 
-    public function run()
+    public function run(\swoole_process $worker)
     {
-        swoole_timer_tick(10000, [$this, 'checkMainProcessIFexists'], $this->_worker);
+        $this->_worker = $worker;
+        swoole_set_process_name($this->getProcessName());
+        //swoole_timer_tick(10000, [$this, 'checkMainProcessIFexists'], $this->_worker);
         while (1) {
-            $data = $this->_redis->rpop(RedisCacheClear::$_list_key_conf[ClearCache::KEY_EVENT_EXPIRED]);
+            $data = $this->_redis->rpopPon(RedisCacheClear::$_list_key_conf[ClearCache::KEY_EVENT_EXPIRED]);
             if (!(empty($data) || $data === false)) {
-                $this->deleteExpireField($data);
+                var_dump($data);
+                //$this->deleteExpireField($data);
             }
         }
     }
