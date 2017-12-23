@@ -113,6 +113,7 @@ class RedisCache
         try {
             if ($this->_conn) {
                 $this->_predis->subscribe($channelName, $callbackArr);
+                echo "开始订阅！";
             }else{
                 echo "Connect fail \n";
             }
