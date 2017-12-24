@@ -10,13 +10,12 @@
  */
 namespace App\module;
 
-use App\core\AsynRedis;
 use App\core\RedisCache;
 use App\worker\job\ClearCache;
 
 class RedisCacheClear
 {
-    /** @var $_redisCache AsynRedis */
+    /** @var  $_redis \Redis */
     protected $_redis;
     protected static $_single =null;
     public static $_list_key_conf = [
@@ -26,7 +25,8 @@ class RedisCacheClear
 
     public function __construct()
     {
-        $this->_redis = RedisCache::getSingleRedis(true,'redis_list');
+        $this->_redis = new \Redis();
+        $this->_redis ->connect('192.168.1.125',6379);
     }
 
     /**
@@ -62,7 +62,7 @@ class RedisCacheClear
 
     protected function pushList($key,$value)
     {
-        var_dump($this->_redis);
-        return $this->_redis->lpushPon($key,$value);
+        $s=$this->_redis->lPush($key,$value);
+        return $s;
     }
 }

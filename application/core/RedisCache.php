@@ -94,7 +94,7 @@ class RedisCache
     {
         try {
             $this->_predis = new \Redis();
-            var_dump($this->_predis->pconnect($this->_config['host'],intval($this->_config['port'])));
+            $this->_predis->pconnect($this->_config['host'],intval($this->_config['port']));
             $this->_conn = true;
         } catch (\RedisException $e) {
             $this->conn = false;
@@ -136,10 +136,15 @@ class RedisCache
         return $this->_predis->lPush($key,$value);
     }
 
-    public function rpushPon($key,$value=1)
+    public function lpushPon($key,$value=1)
     {
-
-        return $this->_predis->rPush($key,$value);
+        echo $this->_predis->ping();
+        try {
+            $this->_predis->setOption(\Redis::OPT_READ_TIMEOUT,-1);
+            return $this->_predis->lPush($key, $value);
+        }catch (\RedisException $re){
+            echo $re->getMessage();
+        }
     }
 
 
