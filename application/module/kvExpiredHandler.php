@@ -88,7 +88,7 @@ class kvExpiredHandler
     {
         $mpId = PandaTaskServer::getMpId();
         if(!\swoole_process::kill($mpId,0)){//父进程已经不存在,退出当前worker,回收进程资源
-            error_log(date('Y-m-d H:i:s')."\t"."Message: PandaTaskServer Quit!",3,LOG_PATH.'PandaTaskServer.log');
+            error_log(date('Y-m-d H:i:s')."\t"."Message: PandaTaskServer is Quit!  The Worker Process[{$this->_worker->pid}] also to  Quit!".PHP_EOL,3,LOG_PATH.'PandaTaskServer.log');
             $worker->exit();
         }
     }
