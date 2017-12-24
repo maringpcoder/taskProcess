@@ -2,7 +2,7 @@
 namespace App\core;
 use App\lib\Config;
 /**
- * 异步redis客户端
+ * 异步redis客户端 ...未完
  * Created by PhpStorm.
  * User: marin
  * Date: 2017/12/19
