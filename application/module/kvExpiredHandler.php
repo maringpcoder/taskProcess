@@ -64,7 +64,7 @@ class kvExpiredHandler
 
         foreach (AppConf::EXPIRE_KEY as $hashKey) {
             $this->_arCache->hDel($hashKey,$uidAsField);
-            echo "KEY:[$hashKey] ,删除用户ID为：".$uidAsField."的用户!".PHP_EOL;
+            error_log("KEY:[$hashKey] ,删除用户ID为：".$uidAsField."的用户!".PHP_EOL,3,'clear_record.log');
         }
     }
 
