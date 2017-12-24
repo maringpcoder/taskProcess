@@ -67,8 +67,7 @@ class PandaTaskServer
         try{
             $currentWorker = $this->_maxProcessSize - count($this->_processWorker);
             for($n=0;$n<$currentWorker;$n++){
-                $kvExpiredHandlerObj = new kvExpiredHandler();
-                $process = new \swoole_process([$kvExpiredHandlerObj,'run']);
+                $process = new \swoole_process(['\\App\\module\\kvExpiredHandler','run'],false,false);
                 $processId = $process->start();
                 $this->_processWorker[$processId] = microtime(true);
                 usleep(200);

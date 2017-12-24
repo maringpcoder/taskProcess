@@ -8,7 +8,7 @@
  */
 namespace App\worker;
 use App\lib\Config;
-use App\MasterProcess;
+use App\ConsumerMaster;
 use App\worker\job\Consumer;
 
 class Worker
@@ -49,7 +49,7 @@ class Worker
      */
     public function checkMasterProcessExists()
     {
-        $mpId = MasterProcess::getMpId();
+        $mpId = ConsumerMaster::getMpId();
         if(!\swoole_process::kill($mpId,0)){
             $childProcessName = $this->getWorkerProcessName();
             $worker_params = json_encode($this->_worker);
