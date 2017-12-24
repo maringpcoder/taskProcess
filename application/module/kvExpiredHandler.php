@@ -76,7 +76,6 @@ class kvExpiredHandler
     public function checkMainProcessIFexists()
     {
         $mpId = PandaTaskServer::getMpId();
-        error_log('time:'.time().PHP_EOL,3,LOG_PATH.'PandaTaskServer.log');
         if(!\swoole_process::kill($mpId,0)){//父进程已经不存在,退出当前worker,回收进程资源
             error_log(date('Y-m-d H:i:s')."\t"."Message: PandaTaskServer Quit!",3,LOG_PATH.'PandaTaskServer.log');
             $this->_worker->exit();
