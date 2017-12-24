@@ -10,7 +10,6 @@ namespace App;
 
 include_once('./application/bootstrap.php');
 use App\lib\Config;
-use App\module\kvExpiredHandler;
 
 class PandaTaskServer
 {
