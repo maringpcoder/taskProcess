@@ -79,4 +79,15 @@ swoole1.9.2+
 
 </code>
 
-	
+# kafka server启动 #
+    bin/zookeeper-server-start.sh config/zookeeper.properties zookeeper
+    bin/kafka-server-start.sh config/server.properties kafka
+# kafka 创建主题
+	bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic test 如果有test 这个topic了不需要再次创建
+	bin/kafka-topics.sh --list --zookeeper localhost:2181 查看方才创建的主体
+# kafka 生产者发送消息到broker
+    bin/kafka-console-producer.sh --broker-list localhost:9092 --topic test
+#kafka 消费者从broker pull message to standard output
+    bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test --from-beginning
+    
+kafka可以设置多个多个broker 详情配置看官方配置.........
