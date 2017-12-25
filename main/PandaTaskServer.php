@@ -8,7 +8,7 @@
  */
 namespace App;
 
-include_once('./application/bootstrap.php');
+include_once('../application/bootstrap.php');
 use App\lib\Config;
 
 class PandaTaskServer

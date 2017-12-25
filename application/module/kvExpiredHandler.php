@@ -43,7 +43,6 @@ class kvExpiredHandler
         while (1) {
             $data = $this->_redis->rpopPon(RedisCacheClear::$_list_key_conf[ClearCache::KEY_EVENT_EXPIRED]);
             if (!(empty($data) || $data === false)) {
-                echo "no empty!";
                 $this->deleteExpireField($data);
             }
             //完成当前工作之后检查主进程是否还在

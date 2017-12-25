@@ -7,7 +7,7 @@ namespace App;
 use App\lib\Config;
 use App\worker\CacheClearWorker;
 
-include_once('./application/bootstrap.php');
+include_once('../application/bootstrap.php');
 
 class subscribleMaster
 {

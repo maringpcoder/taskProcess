@@ -16,7 +16,7 @@ namespace App;
 
 use App\lib\Config;
 
-include_once('./application/bootstrap.php');
+include_once('../application/bootstrap.php');
 
 class ConsumerMaster
 {
