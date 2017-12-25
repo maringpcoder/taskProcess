@@ -13,6 +13,11 @@ swoole1.9.2+
 2. Kafka Server 版本大于 0.8.0
 3. 消费模块 Kafka Server 版本需要大于 0.9.0
 4. redis 3.2+
+5. Zookeeper2+
+6. Jdk1.8+
+
+> Zookeeper需要与kafka版本匹配,否则kafka运行可能会失败
+
 
 ##相关配置##
 配置文件所处路径：ROOT_PATH/.inv
