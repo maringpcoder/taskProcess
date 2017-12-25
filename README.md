@@ -21,6 +21,8 @@ swoole1.9.2+
     [log_section]
     panda_process = 'panda_process'
     ;kafka日志队列处理主进程名称
+    broker_list ='172.16.61.176:9092'
+    ;kafka日志队列处理主进程名称
     master['log_master_name']='log_kafka_master'
     ;kafka worker进程名称
     children['log_kafka']='log_kafka_worker'
