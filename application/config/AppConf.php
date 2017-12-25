@@ -29,14 +29,24 @@ class AppConf{
         'xm_activity_config.netbar_id',//官方活动配置
         'recharge_config.netbar_id'//我也不知道的啥鸡巴配置
     ];
-    static $kafkaConsumerAppConfig =[//kafka应用配置(consumer)
-        'RefreshIntervalMs'=>1000,
-        'GroupId'=>'test',
-        'BrokerVersion'=>'1.0.0',
-        'Topics'=>['test'],
-        'OffsetReset'=>'earliest'
+
+    /**
+     * kafka应用配置(consumer)
+     * @var $kafkaConsumerAppConfig array
+     */
+    static $kafkaConsumerAppConfig =[
+        'RefreshIntervalMs'=>300000,//默认5分钟刷新一次
+        'GroupId'=>'test',//Client group id string. All clients sharing the same group.id belong to the same group.
+        'BrokerVersion'=>'1.0.0',//User supplied broker version
+        'Topics'=>['test'],//topic name group
+        'OffsetReset'=>'earliest'//Action to take when there is no initial offset in offset store or the desired offset is out of range
     ];
-    static $kafkaProducerAppConfig =[//kafka应用配置(producer)
+
+    /**
+     * kafka应用配置(producer)
+     * @var $kafkaProducerAppConfig array
+     */
+    static $kafkaProducerAppConfig =[
         //todo 待完善
     ];
 }
