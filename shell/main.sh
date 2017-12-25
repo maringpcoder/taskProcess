@@ -3,7 +3,7 @@
 #Filename:      main.sh
 #Date:          2017/12/25
 #Author:        Marin
-#Description:   process handler
+#Description:   Process handler
 #Copyright:   2017 (c) Marin
 #-------------------------------------------------------------------
 #Version:   1.0
@@ -84,7 +84,7 @@ do
 done
 #echo ${array_file_process[2]}
 #获取需要启动的脚本进程名称
-for data in ${array_file_process[@]}
+for data  in ${array_file_process[@]}
 do
     echo "$data";
 done
