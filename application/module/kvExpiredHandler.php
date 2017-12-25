@@ -26,7 +26,7 @@ class kvExpiredHandler
     {
         $this->_worker = $worker;
         $this->_redis = RedisCache::getSingleRedis(true, 'redis_list');
-        $this->_arCache = RedisCache::getSingleRedis(false, 'redis_kv_expire');
+        $this->_arCache = RedisCache::getSingleRedis(false, 'redis_ar');
         $this->_config = Config::getConfigArr('panda_server_section');
         swoole_set_process_name($this->getProcessName());
         error_log(date('Y-m-d H:i:s')."\tKVWorker Process {$this->_worker->pid} Start!\n",3,LOG_PATH.'log.txt');
