@@ -8,6 +8,8 @@
  */
 
 namespace App\worker\job;
+use App\config\AppConf;
+use App\lib\Config;
 use Kafka\ConsumerConfig;
 use Monolog\Handler\StdoutHandler;
 use Monolog\Logger;
@@ -20,16 +22,22 @@ class Consumer
      */
     public static function run()
     {
+        static $brokerList=null;
+        if($brokerList==null){
+            $config = Config::getConfigArr('log_section');
+            $brokerList = $config['broker_list'];
+        }
+
         $logger = new Logger('over_time_change');
         $logger ->pushHandler(new StdoutHandler());
 
         $config = ConsumerConfig::getInstance();
-        $config->setMetadataRefreshIntervalMs(1000);
-        $config->setMetadataBrokerList('172.16.61.176:9092');
-        $config->setGroupId('test');
-        $config->setBrokerVersion('1.0.0');
-        $config->setTopics(['test']);
-        $config->setOffsetReset('earliest');
+        $config->setMetadataRefreshIntervalMs(AppConf::$kafkaConsumerAppConfig['RefreshIntervalMs']);
+        $config->setMetadataBrokerList($brokerList);
+        $config->setGroupId(AppConf::$kafkaConsumerAppConfig['GroupId']);
+        $config->setBrokerVersion(AppConf::$kafkaConsumerAppConfig['BrokerVersion']);
+        $config->setTopics(AppConf::$kafkaConsumerAppConfig['Topics']);
+        $config->setOffsetReset(AppConf::$kafkaConsumerAppConfig['OffsetReset']);
         try{
             $consumer = new \Kafka\Consumer();
             $consumer->setLogger($logger);

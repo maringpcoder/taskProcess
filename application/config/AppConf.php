@@ -29,4 +29,14 @@ class AppConf{
         'xm_activity_config.netbar_id',//官方活动配置
         'recharge_config.netbar_id'//我也不知道的啥鸡巴配置
     ];
+    static $kafkaConsumerAppConfig =[//kafka应用配置(consumer)
+        'RefreshIntervalMs'=>1000,
+        'GroupId'=>'test',
+        'BrokerVersion'=>'1.0.0',
+        'Topics'=>['test'],
+        'OffsetReset'=>'earliest'
+    ];
+    static $kafkaProducerAppConfig =[//kafka应用配置(producer)
+        //todo 待完善
+    ];
 }
