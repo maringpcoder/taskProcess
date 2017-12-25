@@ -84,14 +84,19 @@ do
 done
 #echo ${array_file_process[2]}
 #获取需要启动的脚本进程名称
-for data  in ${array_file_process[@]}
-do
-    echo "$data";
-done
+arlen=${#array_file_process[*]}
 
-echo "1: ConsumerMaster"
-echo "2: PandaTaskServer"
-echo "3: subscribleMaster"
+for data  in $(seq 0 ${#array_file_process[*]})
+do
+    if test $data -lt $arlen ;then
+        echo "$data: ${array_file_process[$data]}"
+    fi
+
+done
+#
+#echo "1: ConsumerMaster"
+#echo "2: PandaTaskServer"
+#echo "3: subscribleMaster"
 
 
 
