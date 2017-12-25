@@ -70,8 +70,9 @@ echo "|                  For more information please cat readme.md             |
 echo "+------------------------------------------------------------------------+"
 echo "=========================================================================="
 
-$worker_process="`ls -A ${main_dir}`"
-exit 1
+worker_process=`ls -A ${main_dir} `
+
+
 
 
 #获取需要启动的脚本进程名称
