@@ -12,6 +12,6 @@ class AppConf{
      */
     const EXPIRE_KEY=[
             'users.id',
-            'active.id'
+//            'active.id'
     ];
 }

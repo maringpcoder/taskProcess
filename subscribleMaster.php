@@ -5,9 +5,11 @@
  */
 namespace App;
 use App\lib\Config;
+use App\worker\CacheClearWorker;
+
 include_once('./application/bootstrap.php');
 
-class ClearCacheMaster
+class subscribleMaster
 {
     protected $_max_worker_num = 0;
     protected $_lock = null;
@@ -40,6 +42,7 @@ class ClearCacheMaster
         $this->_lock->lock();
         try {
             $sizeWorker = $this->_max_worker_num - count($this->_workers);
+
             for ($n = 0; $n < $sizeWorker; $n++) {
                 //统一子进程执行入口方法
                 $process = new \swoole_process(['\\App\\worker\\CacheClearWorker', 'Start'], false, false);
@@ -123,6 +126,6 @@ class ClearCacheMaster
     }
 }
 
-$mainProcess = new ClearCacheMaster();
+$mainProcess = new subscribleMaster();
 $mainProcess->start();
 $mainProcess->after();

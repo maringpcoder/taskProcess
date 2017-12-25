@@ -15,13 +15,21 @@
 //    });
 //});
 
-namespace App;
-use App\core\AsynRedis;
-use App\server\PandaTaskServer;
+//namespace App;
+//use App\core\AsynRedis;
+//
+//use App\server\PandaTaskServer;
 
-include_once('./application/bootstrap.php');
+//include_once('./application/bootstrap.php');
 //$AsynRedis = AsynRedis::Single('redis_list');
 //$AsynRedis ->lpush("my_task",time());
 
-$pandaTaskServer = new PandaTaskServer();
-$pandaTaskServer->Start();
+//$pandaTaskServer = new PandaTaskServer();
+//$pandaTaskServer->Start();
+swoole_timer_tick(1000,function(){
+    error_log("timeout!".PHP_EOL,3,'./mm.log');});
+for ($n=0;$n<20;$n++){
+    echo $n;
+    sleep(2);
+}
+

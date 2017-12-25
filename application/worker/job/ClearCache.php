@@ -17,9 +17,7 @@ class ClearCache
 {
 
     CONST KEY_EVENT_EXPIRED = '__keyevent@0__:expired';
-    /**
-     * 开始工作
-     */
+
     public static function run()
     {
         try {

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * redis缓存驱动
+ * redis缓存驱动 ..未完
  * Created by PhpStorm.
  * User: marin
  * Date: 2017/12/18
@@ -94,7 +94,7 @@ class RedisCache
     {
         try {
             $this->_predis = new \Redis();
-            $this->_predis->pconnect($this->_config['host'],intval($this->_config['password']));
+            $this->_predis->pconnect($this->_config['host'],intval($this->_config['port']));
             $this->_conn = true;
         } catch (\RedisException $e) {
             $this->conn = false;
@@ -112,12 +112,11 @@ class RedisCache
     {
         try {
             if ($this->_conn) {
+                $this->_predis->setOption(\Redis::OPT_READ_TIMEOUT,-1);
                 $this->_predis->subscribe($channelName, $callbackArr);
-            }else{
-                echo "Connect fail \n";
             }
         }catch (\RedisException $exception){
-            throw new \Exception($exception->getMessage(),$exception->getCode());
+            throw new \Exception($exception->getMessage()."\t gogogogogog ",$exception->getCode());
         }
     }
 
@@ -134,16 +133,40 @@ class RedisCache
     public function lpush($key,$value=1)
     {
 
-        return $this->_redis->lPush($key,serialize($value));//serialize有性能开销,实际如队列需要改写一下这里的逻辑,处理一下value,建议先打包一下
+        return $this->_predis->lPush($key,$value);
     }
+
+    public function lpushPon($key,$value=1)
+    {
+        echo $this->_predis->ping();
+        try {
+            $this->_predis->setOption(\Redis::OPT_READ_TIMEOUT,-1);
+            return $this->_predis->lPush($key, $value);
+        }catch (\RedisException $re){
+            echo $re->getMessage();
+        }
+    }
+
 
     public function rpop($key)
     {
         return $this->_redis->rPop($key);
     }
+    public function rpopPon($key)
+    {
+        try {
+            $this->_predis->setOption(\Redis::OPT_READ_TIMEOUT,-1);
+            return $this->_predis->rPop($key);
+        }catch (\RedisException $e){
+            echo $e->getMessage();
+        }
+    }
+
+
 
     public function hDel($key,$field)
     {
+        error_log("key:$key ,field:$field",3,LOG_PATH.'hDel.log');
         return $this->_redis->hDel($key,$field);
     }
 }
