@@ -48,6 +48,7 @@ sw_head_v=${swoole_v%%.*}
 sw_v_tmp=${swoole_v%.*}
 sw_mid_v=${sw_v_tmp##*.}
 sw_tail=${swoole_v##*.}
+
 if test ${sw_head_v} -lt 1
 then
     Echo_Red "swoole version is to low ,require >1.9.0"
@@ -59,7 +60,6 @@ else
     exit 1
     fi
 fi
-
 clear
 echo "+------------------------------------------------------------------------+"
 echo "|          TaskProcess For Linux Server, Written by Marin                |"
@@ -70,15 +70,25 @@ echo "|                  For more information please cat readme.md             |
 echo "+------------------------------------------------------------------------+"
 echo "=========================================================================="
 
-worker_process=`ls -A ${main_dir} `
-for a in $worker_process
+#file_real_path=$(readlink -f "$main_dir")
+index=0
+array_file_process=()
+for file in $(readlink -f "${main_dir}/*")
 do
-    echo a;
+    if [ -f $file ]
+    then
+        file_Name=${file##*/}
+        array_file_process[${index}]=${file_Name%%.*}
+        let "index++"
+    fi
+done
+#echo ${array_file_process[2]}
+#获取需要启动的脚本进程名称
+for data in ${array_file_process[@]}
+do
+    echo "$data";
 done
 
-
-
-#获取需要启动的脚本进程名称
 echo "1: ConsumerMaster"
 echo "2: PandaTaskServer"
 echo "3: subscribleMaster"
