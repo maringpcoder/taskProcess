@@ -11,6 +11,7 @@
 namespace App\module;
 
 use App\core\RedisCache;
+use App\lib\Config;
 use App\worker\job\ClearCache;
 
 class RedisCacheClear
@@ -26,7 +27,14 @@ class RedisCacheClear
     public function __construct()
     {
         $this->_redis = new \Redis();
-        $this->_redis ->connect('192.168.1.125',6379);
+        $config = Config::getConfigArr('redis_env_section');
+
+        $this->_redis ->connect($config['redis_ar']['host'],$config['redis_ar']['port']);
+        if(isset($config['redis_ar']['port']) && $config['redis_ar']['password']){
+            if ($this->_redis->auth($config['redis_ar']['password']) === false){
+                $this->_redis =null;
+            }
+        }
     }
 
     /**
@@ -62,7 +70,13 @@ class RedisCacheClear
 
     protected function pushList($key,$value)
     {
-        $s=$this->_redis->lPush($key,$value);
-        return $s;
+        if($this->_redis){
+            $s=$this->_redis->lPush($key,$value);
+            return $s;
+        }else{
+            return false;
+        }
+
+
     }
 }
