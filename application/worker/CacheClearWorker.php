@@ -43,7 +43,7 @@ class CacheClearWorker
         }
     }
 
-    public  function Start(\swoole_process $worker)
+    public static  function Start(\swoole_process $worker)
     {
         new self($worker);
     }
