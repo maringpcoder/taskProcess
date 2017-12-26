@@ -14,7 +14,6 @@ use App\worker\Worker;
 use Kafka\ConsumerConfig;
 use Monolog\Handler\StdoutHandler;
 use Monolog\Logger;
-use RdKafka\KafkaConsumer;
 
 class Consumer
 {
