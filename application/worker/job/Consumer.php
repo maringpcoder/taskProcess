@@ -44,6 +44,7 @@ class Consumer
             $consumer = new \Kafka\Consumer();
             //$consumer->setLogger($logger);
             $consumer->start(function ($topc, $partition, $message)use ($consumerWorkerProcess) {
+                //todo something work,and check Master is exists
                 error_log("consumer_message:" . json_encode($message) . PHP_EOL, 3, LOG_PATH . 'consumer.log');
                 $consumerWorkerProcess->checkMasterProcessExists();
             });
