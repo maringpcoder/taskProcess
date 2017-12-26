@@ -10,6 +10,7 @@
 namespace App\worker\job;
 use App\config\AppConf;
 use App\lib\Config;
+use App\worker\Worker;
 use Kafka\ConsumerConfig;
 use Monolog\Handler\StdoutHandler;
 use Monolog\Logger;
@@ -20,8 +21,9 @@ class Consumer
 
     /**
      * @description 消费
+     * @param $consumerWorkerProcess Worker
      */
-    public static function run()
+    public static function run($consumerWorkerProcess)
     {
         static $brokerList=null;
         if($brokerList==null){
@@ -41,8 +43,9 @@ class Consumer
         try{
             $consumer = new \Kafka\Consumer();
             //$consumer->setLogger($logger);
-            $consumer->start(function ($topc, $partition, $message) {
+            $consumer->start(function ($topc, $partition, $message)use ($consumerWorkerProcess) {
                 error_log("consumer_message:" . json_encode($message) . PHP_EOL, 3, LOG_PATH . 'consumer.log');
+                $consumerWorkerProcess->checkMasterProcessExists();
             });
         }catch (\Exception $exception){
 
