@@ -25,11 +25,23 @@
 //$AsynRedis ->lpush("my_task",time());
 
 //$pandaTaskServer = new PandaTaskServer();
-//$pandaTaskServer->Start();
-swoole_timer_tick(1000,function(){
-    error_log("timeout!".PHP_EOL,3,'./mm.log');});
-for ($n=0;$n<20;$n++){
-    echo $n;
-    sleep(2);
+////$pandaTaskServer->Start();
+//swoole_timer_tick(1000,function(){
+//    error_log("timeout!".PHP_EOL,3,'./mm.log');});
+//for ($n=0;$n<20;$n++){
+//    echo $n;
+//    sleep(2);
+//}
+//
+
+
+
+function m()
+{
+    while(1){
+        echo 3333;
+    }
 }
 
+call_user_func('m');
+echo "hello";
