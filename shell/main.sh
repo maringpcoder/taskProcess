@@ -22,6 +22,9 @@ parent_cur_dir="${cur_dir}/../"
 Stack=$1
 main_dir="${parent_cur_dir}main/"
 . include/common.sh
+. include/ConsumerMaster.sh
+. include/PandaTaskServer.sh
+. include/subscribleMaster.sh
 
 phpcmd=php
 php_prefix="$phpcmd -r ";
@@ -71,7 +74,7 @@ echo "+------------------------------------------------------------------------+
 echo "=========================================================================="
 
 #file_real_path=$(readlink -f "$main_dir")
-index=0
+index=1
 array_file_process=()
 for file in $(readlink -f "${main_dir}/*")
 do
@@ -83,34 +86,41 @@ do
     fi
 done
 #echo ${array_file_process[2]}
-#获取需要启动的脚本进程名称
+#archive process name array
 arlen=${#array_file_process[*]}
-
-for data  in $(seq 0 ${#array_file_process[*]})
+You_Choice=""
+Echo_Yellow "You have ${arlen} options for your run."
+for data  in $(seq 1 ${#array_file_process[*]})
 do
-    if test $data -lt $arlen ;then
-        echo "$data: ${array_file_process[$data]}"
+#    echo "${arlen} ${data}  ${array_file_process[$data]}";
+    if  [ ${data} -le ${arlen} -a ${data} -ge 1 ]
+    then
+        echo "$data: ${array_file_process[${data}]}"
+        if test ${data} -eq ${arlen};
+        then
+           read -p "Enter your choice number (1-$arlen):" You_Choice
+        fi
     fi
-
 done
-#
-#echo "1: ConsumerMaster"
-#echo "2: PandaTaskServer"
-#echo "3: subscribleMaster"
 
+read -p "Enter you will to do (start|stop):" Action_Wil
 
 
 #获取进程参数
+#${array_file_process[${You_Choice}]}
 
 
-
-case ${Stack} in
+case  ${Action_Wil} in
 
 "start")
-
+handler_script ${array_file_process[${You_Choice}]} "start"
     ;;
 "stop")
+handler_script ${array_file_process[${You_Choice}]} "stop"
     ;;
 "reboot")
+handler_script ${array_file_process[${You_Choice}]} "reboot"
     ;;
 esac
+
+

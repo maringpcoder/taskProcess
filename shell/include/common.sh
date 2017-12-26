@@ -20,3 +20,22 @@ Echo_Yellow()
 {
   echo $(Color_Text "$1" "33")
 }
+
+handler_script()
+{
+    action=$2
+    server=$1
+    case $server in
+    "ConsumerMaster")
+        ConsumerMaster ${action}
+    ;;
+    "PandaTaskServer")
+        PandaTaskServer ${action}
+    ;;
+    "subscribleMaster")
+        subscribleMaster ${action}
+    ;;
+    esac
+
+
+}
