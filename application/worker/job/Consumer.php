@@ -13,6 +13,7 @@ use App\lib\Config;
 use Kafka\ConsumerConfig;
 use Monolog\Handler\StdoutHandler;
 use Monolog\Logger;
+use RdKafka\KafkaConsumer;
 
 class Consumer
 {
@@ -27,7 +28,6 @@ class Consumer
             $config = Config::getConfigArr('log_section');
             $brokerList = $config['broker_list'];
         }
-
         $logger = new Logger('over_time_change');
         $logger ->pushHandler(new StdoutHandler());
 
@@ -40,12 +40,12 @@ class Consumer
         $config->setOffsetReset(AppConf::$kafkaConsumerAppConfig['OffsetReset']);
         try{
             $consumer = new \Kafka\Consumer();
-            $consumer->setLogger($logger);
+            //$consumer->setLogger($logger);
             $consumer->start(function ($topc, $partition, $message) {
-                    error_log("consumer_message:" . json_encode($message) . PHP_EOL, 3, LOG_PATH . 'consumer.log');
-            },false);
-
+                error_log("consumer_message:" . json_encode($message) . PHP_EOL, 3, LOG_PATH . 'consumer.log');
+            });
         }catch (\Exception $exception){
+
             error_log($exception->getMessage(),3,LOG_PATH.'exception.log');
         }
     }

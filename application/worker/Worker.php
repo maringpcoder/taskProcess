@@ -21,6 +21,7 @@ class Worker
         swoole_set_process_name(sprintf($this->getWorkerProcessName().':%s','worker'));
         error_log(date('Y-m-d H:i:s')."\t: The Worker Process Worker Start!".PHP_EOL,3,LOG_PATH.'loop_worker_start.log');
         $this->loopWorker();
+        swoole_timer_tick(5000,[$this,'checkMasterProcessExists']);
     }
     /**
      * 工作进程开始
@@ -30,8 +31,7 @@ class Worker
         try {
             while (true) {
                 Consumer::run();
-                usleep(50000);
-                $this->checkMasterProcessExists();
+
             }
         }catch (\Exception $exception){
             $this->_worker->exit();//如有异常,worker退出,等待父进程重启子进程
