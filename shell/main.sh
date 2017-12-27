@@ -29,8 +29,9 @@ main_dir="${parent_cur_dir}main/"
 phpcmd=php
 php_prefix="$phpcmd -r ";
 version="`$php_prefix  'echo  PHP_VERSION;'`"
+ini_file="${parent_cur_dir}env.ini"
 #check env.ini is exists
-if [ ! -s "${parent_cur_dir}env.ini" ]; then
+if [ ! -s "${ini_file}" ]; then
     Echo_Red "env.ini was not exists"
     exit 1
 fi
