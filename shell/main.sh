@@ -107,20 +107,22 @@ done
 read -p "Enter you will to do (start|stop):" Action_Wil
 
 
+
 #获取进程参数
 #${array_file_process[${You_Choice}]}
 
-
+iniRealPath="$(readlink -f ${ini_file})"
+mainProcessRealPath="$(readlink -f ${main_dir})"
 case  ${Action_Wil} in
 
 "start")
-handler_script ${array_file_process[${You_Choice}]} "start"
+handler_script ${array_file_process[${You_Choice}]} ${Action_Wil} ${iniRealPath} ${mainProcessRealPath}
     ;;
 "stop")
-handler_script ${array_file_process[${You_Choice}]} "stop"
+#handler_script ${array_file_process[${You_Choice}]} ${Action_Wil} "${iniRealPath}"
     ;;
 "reboot")
-handler_script ${array_file_process[${You_Choice}]} "reboot"
+#handler_script ${array_file_process[${You_Choice}]} ${Action_Wil} "${iniRealPath}"
     ;;
 esac
 
