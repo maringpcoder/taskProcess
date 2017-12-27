@@ -44,6 +44,15 @@ readIni() {
     file=$1
     section=$2
     item=$3
-    val="$(awk -F '=' '/\['${section}'\]/{a=1} (a==1 && "'${item}'"==$1){a=0;print $2}' ${file})"
+    val=$(awk -F '=' '/\['${section}'\]/{a=1} (a==1 && "'${item}'"==$1){a=0;print $2}' ${file})
     echo $val
+}
+
+check(){
+    local a="$1"
+    printf "%d" "$a" &>/dev/null && echo "integer" && return
+    printf "%d" "$(echo $a|sed 's/^[+-]\?0\+//')" &>/dev/null && echo "integer" && return
+    printf "%f" "$a" &>/dev/null && echo "number" && return
+    [ ${#a} -eq 1 ] && echo "char" && return
+    echo "string"
 }

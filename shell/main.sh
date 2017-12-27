@@ -26,9 +26,10 @@ main_dir="${parent_cur_dir}main/"
 . include/PandaTaskServer.sh
 . include/subscribleMaster.sh
 
-phpcmd=php
+phpcmd=/usr/local/php-7.0.13/bin/php
 php_prefix="$phpcmd -r ";
 version="`$php_prefix  'echo  PHP_VERSION;'`"
+
 ini_file="${parent_cur_dir}env.ini"
 #check env.ini is exists
 if [ ! -s "${ini_file}" ]; then
@@ -55,15 +56,16 @@ sw_tail=${swoole_v##*.}
 
 if test ${sw_head_v} -lt 1
 then
-    Echo_Red "swoole version is to low ,require >1.9.0"
+    Echo_Red "swoole version is to low A ,require >1.9.0"
     exit 1
-else
-    if test ${sw_mid_v} -lt 9
+fi
+
+if test ${sw_head_v} -gt 1 -0  ${sw_mid_v} -lt 9
     then
-        Echo_Red "swoole version is to low ,require >1.9.0"
+        Echo_Red "swoole version is to low B ,require >1.9.0"
     exit 1
     fi
-fi
+
 clear
 echo "+------------------------------------------------------------------------+"
 echo "|          TaskProcess For Linux Server, Written by Marin                |"
@@ -79,11 +81,17 @@ index=1
 array_file_process=()
 for file in $(readlink -f "${main_dir}/*")
 do
+
     if [ -f $file ]
     then
         file_Name=${file##*/}
-        array_file_process[${index}]=${file_Name%%.*}
+        #读取文件后缀,排除其他文件出现
+        file_ext=${file##*.}
+        if test ${file_ext} = 'php' ;then
+            array_file_process[${index}]=${file_Name%%.*}
         let "index++"
+        fi
+
     fi
 done
 #echo ${array_file_process[2]}
@@ -112,7 +120,8 @@ read -p "Enter you will to do (start|stop):" Action_Wil
 #${array_file_process[${You_Choice}]}
 
 iniRealPath="$(readlink -f ${ini_file})"
-mainProcessRealPath="$(readlink -f ${main_dir})"
+mainProcessRealPath="$(readlink -f ${main_dir})/"
+
 case  ${Action_Wil} in
 
 "start")
