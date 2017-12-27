@@ -41,7 +41,9 @@ handler_script()
 }
 
 readIni() {
-    file=$1;section=$2;item=$3;
-    val=$(awk -F '=' '/\['${section}'\]/{a=1} (a==1 && "'${item}'"==$1){a=0;print $2}' ${file})
-    echo ${val}
+    file=$1
+    section=$2
+    item=$3
+    val="$(awk -F '=' '/\['${section}'\]/{a=1} (a==1 && "'${item}'"==$1){a=0;print $2}' ${file})"
+    echo $val
 }
