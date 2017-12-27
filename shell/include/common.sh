@@ -27,13 +27,13 @@ handler_script()
     server=$1
     case $server in
     "ConsumerMaster")
-        ConsumerMaster ${action} $3
+        ConsumerMaster ${action} $3 $4
     ;;
     "PandaTaskServer")
-        PandaTaskServer ${action} $3
+        PandaTaskServer ${action} $3 $4
     ;;
     "subscribleMaster")
-        subscribleMaster ${action} $3
+        subscribleMaster ${action} $3 $4
     ;;
     esac
 
