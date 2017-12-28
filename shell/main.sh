@@ -3,10 +3,11 @@
 #Filename:      main.sh
 #Date:          2017/12/25
 #Author:        Marin
-#Description:   Process handler
+#Description:   Process handler ,处理进程的脚本,主要
 #Copyright:   2017 (c) Marin
 #-------------------------------------------------------------------
 #Version:   1.0
+#===================================================================
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
 export PATH
 

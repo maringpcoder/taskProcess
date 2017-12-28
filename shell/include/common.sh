@@ -48,6 +48,15 @@ readIni() {
     echo $val
 }
 
+trimStr()
+{
+    local str=$1
+    strTmp=$(echo ${str#*\'})
+    strRet=$(echo ${strTmp%\'*})
+    echo $strRet
+}
+
+
 check(){
     local a="$1"
     printf "%d" "$a" &>/dev/null && echo "integer" && return
