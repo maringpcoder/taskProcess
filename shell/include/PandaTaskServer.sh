@@ -130,6 +130,9 @@ PandaTaskServer()
                     kill -9 ${wid}
                     Echo_Green "Already kill worker[${pid}].................."
                 done
+         else
+            Echo_Green "nothing to do!"
+            exit 1
         fi
         ;;
      esac
