@@ -40,7 +40,8 @@ function subscribleMaster
                 Y_SELECT=''
                 Echo_Red "The process is running now !,you will reboot it?"
                 read -p "请选择 (y or n):" Y_SELECT
-                if  ${Y_SELECT} = '' ;then
+                if test ${Y_SELECT} = ""
+                then
                     Y_SELECT='y'
                 fi
 
