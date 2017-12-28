@@ -3,7 +3,7 @@
 function subscribleMaster
 {
      #//检查进程是否存在,如果存在,则什么都不做
-      inifile=$2
+     inifile=$2
      main_path=$3
      theProcessFilePath="${main_path}subscribleMaster.php"
      process_prefix=`readIni ${inifile} "clearCache_section" "panda_process"`
@@ -16,8 +16,9 @@ function subscribleMaster
      process_worker=`trimStr ${process_worker}`
      worker_num=`trimStr ${worker_num}`
 
-#     echo ${process_prefix}
+
      system_process_master_name=$process_prefix':'${process_master}
+
 
 #    echo $system_process_master_name
      system_process_worker_name=${process_prefix}":"${process_worker}
@@ -26,7 +27,9 @@ function subscribleMaster
      master_process_num=`ps -ef |grep -v 'grep'|grep ${system_process_master_name}|wc -l`
      worker_process_num=`ps -ef |grep -v 'grep'|grep ${system_process_worker_name}|wc -l`
      #check master process number is Whether abnormal,if it is abnormal,that kill it`s worker process
+
      process_master_id=`ps -ef | grep -v 'grep'|grep ${system_process_master_name}|awk '{print $2}'`
+
      action=$1
      case ${action} in
      "start")
@@ -99,6 +102,7 @@ function subscribleMaster
         if test ${master_process_num} -ge 1
              then
              #杀完主进程再杀子进程
+
                 for pid in ${process_master_id}
                 do
                     Echo_Red "Kill the ${system_process_master_name} [${pid}]"
