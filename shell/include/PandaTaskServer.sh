@@ -14,28 +14,49 @@ PandaTaskServer()
      process_worker=`readIni ${inifile} "panda_server_section" "panda_process_child"`
      worker_num=`readIni ${inifile} "panda_server_section" "max_process_num"`
 
-     system_process_master_name=${process_prefix}:${process_master}
-     system_process_worker_name=${process_prefix}:${process_worker}
+     process_prefix=`trimStr ${process_prefix}`
+     process_master=`trimStr ${process_master}`
+     process_worker=`trimStr ${process_worker}`
+     worker_num=`trimStr ${worker_num}`
+
+#     echo ${process_prefix}
+     system_process_master_name=$process_prefix':'${process_master}
+
+#    echo $system_process_master_name
+     system_process_worker_name=${process_prefix}":"${process_worker}
      #//检查进程是否存在,如果存在,则什么都不做
+
      master_process_num=`ps -ef |grep -v 'grep'|grep ${system_process_master_name}|wc -l`
      worker_process_num=`ps -ef |grep -v 'grep'|grep ${system_process_worker_name}|wc -l`
-    check ${worker_num}
 
 
      #check master process number is Whether abnormal,if it is abnormal,that kill it`s worker process
      process_master_id=`ps -ef | grep -v 'grep'|grep ${system_process_master_name}|awk '{print $2}'`
 
+
      master_kill_flag=0
      if test ${master_process_num} -gt 1;
      then
-        for pid in ${process_master_id}
+        Y_SELECT=''
+        Echo_Red "PandaTaskServer 主进程数异常,请求主动kill掉所有的 master 进程!"
+        read -p "请选择 (y or n):" Y_SELECT
+        if test ${Y_SELECT} = '';then
+            Y_SELECT='y'
+        fi
 
-        do
-            echo "PandaTaskServer 主进程数异常,主动kill掉所有的 master 进程!"
-            echo "Kill the ${system_process_master_name} [${pid}]"
+        if test ${Y_SELECT} = 'y'; then
+            for pid in ${process_master_id}
+
+            do
+            Echo_Red "Kill the ${system_process_master_name} [${pid}]"
             kill -9 ${pid}
-        done
-        master_kill_flag=1
+            Echo_Green "Already kill ${pid}"
+            echo "==========================================================================="
+            done
+            master_kill_flag=1
+
+        fi
+
      fi
      work_process_id=`ps -ef | grep -v 'grep'|grep ${system_process_worker_name}|awk '{print $2}'`
 
@@ -43,26 +64,56 @@ PandaTaskServer()
      worker_kill_flag=0
      if test ${master_kill_flag} -eq 1
      then
-        for w_pid in ${work_process_id}
-        do
-            echo "PandaTaskServer_worker 主进程数异常,主动kill掉所有的工作进程!"
-            echo "Kill the ${system_process_worker_name} [${pid}]"
-            kill -9 ${w_pid}
-        done
-        worker_kill_flag=1
+        W_SELECT=''
+        Echo_Red "PandaTaskServer 主进程数异常,请求主动kill掉所有的 master 进程!"
+        read -p "请选择 (y or n),default(y):" W_SELECT
+        if test ${W_SELECT} = '';then
+            W_SELECT='y'
+        fi
 
+        if test ${W_SELECT} = 'y'; then
+            for w_pid in ${work_process_id}
+            do
+                Echo_Red "Kill the ${system_process_worker_name} [${w_pid}]"
+                kill -9 ${w_pid}
+                Echo_Green "Already kill ${w_pid}"
+                echo "==========================================================================="
+            done
+        worker_kill_flag=1
+        fi
      fi
 
-    if test ${master_process_num} -eq 1 -a ${worker_num} = ${worker_process_num}
-    then
-        echo "准备杀掉主进程！"
-        kill -9 ${process_master_id}
-        for pid in ${work_process_id}
-        do
-            kill -9 ${pid}
-        done
-    fi
 
-    nohup ${phpcmd} ${theProcessFilePath} >> pandaTaskServer.log &
+
+
+        if test ${master_process_num} = 1 -a ${worker_num} = ${worker_process_num}
+        then
+
+            #进程正常运行中,请求是否重启
+            REBOOT_CHOICE=''
+            Echo_Green "the process is running now ,Does it need to be restarted"
+            read -p "input y or n,default(y):" REBOOT_CHOICE
+                    if test ${REBOOT_CHOICE} = ''
+                     then
+                        REBOOT_CHOICE='y'
+                    fi
+            Echo_Red "准备先杀掉主进程！"
+            kill -9 ${process_master_id}
+            Echo_Green "Already kill the master[${process_master_id}]"
+            for pid in ${work_process_id}
+            do
+                kill -9 ${pid}
+                Echo_Green "Kill worker[${pid}]"
+            done
+
+            nohup ${phpcmd} ${theProcessFilePath} >> pandaTaskServer.log &
+
+        else
+            nohup ${phpcmd} ${theProcessFilePath} >> pandaTaskServer.log &
+        fi
+
+
+
+
 
 }
