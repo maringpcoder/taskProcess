@@ -26,11 +26,8 @@ PandaTaskServer()
 
      master_process_num=`ps -ef |grep -v 'grep'|grep ${system_process_master_name}|wc -l`
      worker_process_num=`ps -ef |grep -v 'grep'|grep ${system_process_worker_name}|wc -l`
-
-
      #check master process number is Whether abnormal,if it is abnormal,that kill it`s worker process
      process_master_id=`ps -ef | grep -v 'grep'|grep ${system_process_master_name}|awk '{print $2}'`
-
      action=$1
      case ${action} in
      "start")
