@@ -4,9 +4,9 @@ php kafka 消费者进程
 队列处理进程
 ## subscribleMaster ##
 php redis 订阅进程
-##package
+## package
 <code>"nmred/kafka-php": "0.2.*"</code>
-##php extension##
+## php extension
 swoole1.9.2+
 ## 环境要求 ##
 1. PHP 版本大于 5.5
